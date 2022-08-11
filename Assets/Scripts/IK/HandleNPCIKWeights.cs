@@ -17,12 +17,16 @@ public class HandleNPCIKWeights : MonoBehaviour
         if (Activate) {
             deactivated = false;
             if (Vector3.Distance(transform.position, target.position) < _lookDistance) {
-                _BodyRig.weight = .75f;
+                if (_BodyRig) {
+                    _BodyRig.weight = .75f;
+                }
                 gameObject.transform.LookAt(Vector3.Slerp(transform.position, target.position, 2f), Vector3.up);
                 LockOnActive = true;
             }
             else if (Vector3.Distance(transform.position, target.position) > _lookDistance) {
-                _BodyRig.weight = 0;
+                if (_BodyRig) {
+                    _BodyRig.weight = 0;
+                }
                 gameObject.transform.LookAt(null, Vector3.up);
                 LockOnActive = false;
             }
