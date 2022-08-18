@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
+    public State current_state;
     public AudioClip use;
     AudioSource sound;
-    void Start() {
-        TryGetComponent<AudioSource>(out sound);
-    }
     public enum State {
         Interacted,
         Uninteracted
     }
-    public State current_state;
     Being being;
+
+    void Start() {
+        TryGetComponent<AudioSource>(out sound);
+    }
 
     // Input
     void OnTriggerEnter(Collider col) {
