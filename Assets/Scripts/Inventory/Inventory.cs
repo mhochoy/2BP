@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
@@ -11,6 +12,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Transform items_parent;
     public Item current_item;
     int internal_item_index = 0;
+    bool done;
 
     public void Awake() 
     {
@@ -19,32 +21,46 @@ public class Inventory : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Index Bounding
-        if (internal_item_index >= items.Count) {
-            internal_item_index = 0;
+        // Disable whatever item was selected when the being was deactivated
+        if (!being.isActive && !done) {
+            done = true;
+            try {
+                Item _selected_item = items[internal_item_index];
+                _selected_item.gameObject.SetActive(false);
+            }
+            catch (ArgumentOutOfRangeException) {
+                // Pass
+            }
+            return;
         }
-        if (internal_item_index < 0) {
-            internal_item_index = 0;
-        }
+        if (being.isActive) {
+            // Index Bounding
+            if (internal_item_index >= items.Count) {
+                internal_item_index = 0;
+            }
+            if (internal_item_index < 0) {
+                internal_item_index = 0;
+            }
 
-        // Set the current Item
-        Item selected_item = items[internal_item_index];
-        if (selected_item) {
-            selected_item.gameObject.SetActive(true);
-            current_item = selected_item;
-        }
+            // Set the current Item
+            Item selected_item = items[internal_item_index];
+            if (selected_item) {
+                selected_item.gameObject.SetActive(true);
+                current_item = selected_item;
+            }
 
-        // Sync Animator to inventory
-        if (current_item) {
-            SetSelectedItem(current_item.item_name);
-        }
-        
-        // Disable all non-selected items
-        foreach (Item item in items) {
-            bool _ThereIsAnItemAndItIsActiveAndEnabled = (item && item.enabled && item.gameObject.activeSelf);
-            if (_ThereIsAnItemAndItIsActiveAndEnabled) {
-                if (item.item_name != current_item.item_name) {
-                    item.gameObject.SetActive(false);
+            // Sync Animator to inventory
+            if (current_item) {
+                SetSelectedItem(current_item.item_name);
+            }
+            
+            // Disable all non-selected items
+            foreach (Item item in items) {
+                bool _ThereIsAnItemAndItIsActiveAndEnabled = (item && item.enabled && item.gameObject.activeSelf);
+                if (_ThereIsAnItemAndItIsActiveAndEnabled) {
+                    if (item.item_name != current_item.item_name) {
+                        item.gameObject.SetActive(false);
+                    }
                 }
             }
         }
@@ -121,7 +137,7 @@ public class Inventory : MonoBehaviour
     }
 
     public void DropItem() {
-        if (Random.Range(0f, 1f) >= .3f && _DroppableItem) {
+        if (UnityEngine.Random.Range(0f, 1f) >= .3f && _DroppableItem) {
             Instantiate(_DroppableItem, transform.position+new Vector3(0f,1.5f,0f), transform.rotation);
         }
     }
