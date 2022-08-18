@@ -210,10 +210,10 @@ BlendTree:
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 0ac9c29a27d76f849a331d16f181f81e, type: 3}
+    m_Motion: {fileID: 882924944870636694, guid: b67398305e5b60848b0fef8d5eda9b7f, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0.7}
-    m_TimeScale: 0.7
+    m_TimeScale: 1.4
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
@@ -226,10 +226,10 @@ BlendTree:
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 966435f28e0fd14479cff4e9a0be3ada, type: 3}
+    m_Motion: {fileID: -5018052305587628524, guid: 72e5dba34042cd0498e0bfa7400c2c42, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: -0.7}
-    m_TimeScale: 0.7
+    m_TimeScale: -1.2
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
@@ -237,7 +237,7 @@ BlendTree:
     m_Motion: {fileID: 1827226128182048838, guid: b08dba1a81cbeab4e9af4c4349afb63c, type: 3}
     m_Threshold: 0
     m_Position: {x: 0.4, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 0.25
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
@@ -245,7 +245,7 @@ BlendTree:
     m_Motion: {fileID: 1827226128182048838, guid: 0f92e885246704b4187c62b7414d674c, type: 3}
     m_Threshold: 0
     m_Position: {x: 0.7, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 0.5
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
@@ -253,7 +253,7 @@ BlendTree:
     m_Motion: {fileID: 1827226128182048838, guid: b08dba1a81cbeab4e9af4c4349afb63c, type: 3}
     m_Threshold: 0
     m_Position: {x: -0.4, y: 0}
-    m_TimeScale: -1
+    m_TimeScale: -0.25
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
@@ -261,7 +261,7 @@ BlendTree:
     m_Motion: {fileID: 1827226128182048838, guid: 0f92e885246704b4187c62b7414d674c, type: 3}
     m_Threshold: 0
     m_Position: {x: -0.7, y: 0}
-    m_TimeScale: -1
+    m_TimeScale: -0.5
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
