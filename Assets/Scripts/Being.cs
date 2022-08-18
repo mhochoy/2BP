@@ -7,13 +7,13 @@ using UnityEngine.Animations.Rigging;
 public class Being : MonoBehaviour
 {
     Animator animator;
-    PlayerInput _input;
     NavMeshAgent _agent;
     HandleRagdoll ragdoll;
     HandleNPCIKWeights _NPCIKWeights;
     Vector3 direction;
     CharacterController _controller;
     Inventory inventory;
+    public PlayerInput _input;
     public bool isActive;
     public int health;
     public bool isAI;
@@ -174,6 +174,14 @@ public class Being : MonoBehaviour
         return _NPCIKWeights.target.tag == tag && IsLockedOn();
     }
 
+    public bool HasInventory() {
+        if (inventory) {
+            return true;
+        }
+
+        return false;
+    }
+
     public Transform GetTarget() {
         return _NPCIKWeights.target;
     }
@@ -185,6 +193,12 @@ public class Being : MonoBehaviour
         if (pickup != null && !isAI) {
             pickup.PickedUp();
             inventory.GiveItem(pickup.item);
+        }
+    }
+
+    public void AddItemToInventory(Item item) {
+        if (HasInventory()) {
+            inventory.GiveItem(item);
         }
     }
 }
