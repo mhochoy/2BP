@@ -22,6 +22,7 @@ public class Being : MonoBehaviour
     [Range(0, 20)]
     public float gravity;
     [SerializeField] private List<Rig> _NPCRigs;
+    [SerializeField] private GameObject ItemTree; 
     
     void Awake() {
         isActive = true;
@@ -96,6 +97,9 @@ public class Being : MonoBehaviour
     }
 
     void Die() {
+        if (ItemTree) {
+            ItemTree.SetActive(false);
+        }
         if (isAI) {
             if (_NPCRigs.Count > 0) {
                 foreach (Rig rig in _NPCRigs) {
