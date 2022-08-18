@@ -12,7 +12,6 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Transform items_parent;
     public Item current_item;
     int internal_item_index = 0;
-    bool done;
 
     public void Awake() 
     {
@@ -21,46 +20,32 @@ public class Inventory : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Disable whatever item was selected when the being was deactivated
-        if (!being.isActive && !done) {
-            done = true;
-            try {
-                Item _selected_item = items[internal_item_index];
-                _selected_item.gameObject.SetActive(false);
-            }
-            catch (ArgumentOutOfRangeException) {
-                // Pass
-            }
-            return;
+        // Index Bounding
+        if (internal_item_index >= items.Count) {
+            internal_item_index = 0;
         }
-        if (being.isActive) {
-            // Index Bounding
-            if (internal_item_index >= items.Count) {
-                internal_item_index = 0;
-            }
-            if (internal_item_index < 0) {
-                internal_item_index = 0;
-            }
+        if (internal_item_index < 0) {
+            internal_item_index = 0;
+        }
 
-            // Set the current Item
-            Item selected_item = items[internal_item_index];
-            if (selected_item) {
-                selected_item.gameObject.SetActive(true);
-                current_item = selected_item;
-            }
+        // Set the current Item
+        Item selected_item = items[internal_item_index];
+        if (selected_item) {
+            selected_item.gameObject.SetActive(true);
+            current_item = selected_item;
+        }
 
-            // Sync Animator to inventory
-            if (current_item) {
-                SetSelectedItem(current_item.item_name);
-            }
-            
-            // Disable all non-selected items
-            foreach (Item item in items) {
-                bool _ThereIsAnItemAndItIsActiveAndEnabled = (item && item.enabled && item.gameObject.activeSelf);
-                if (_ThereIsAnItemAndItIsActiveAndEnabled) {
-                    if (item.item_name != current_item.item_name) {
-                        item.gameObject.SetActive(false);
-                    }
+        // Sync Animator to inventory
+        if (current_item) {
+            SetSelectedItem(current_item.item_name);
+        }
+        
+        // Disable all non-selected items
+        foreach (Item item in items) {
+            bool _ThereIsAnItemAndItIsActiveAndEnabled = (item && item.enabled && item.gameObject.activeSelf);
+            if (_ThereIsAnItemAndItIsActiveAndEnabled) {
+                if (item.item_name != current_item.item_name) {
+                    item.gameObject.SetActive(false);
                 }
             }
         }
@@ -80,8 +65,6 @@ public class Inventory : MonoBehaviour
             _RigAnimator.Play("item_" + item_name);
         }
     }
-
-
 
     public bool HasItem(string _item_name) {
         foreach (Item _item in items) {
