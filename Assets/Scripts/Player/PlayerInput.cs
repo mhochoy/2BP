@@ -11,6 +11,7 @@ public class PlayerInput : MonoBehaviour
     public bool shoot;
     public bool shoot_held;
     public bool reload;
+    public bool use;
     bool switch_pressed_up;
     bool switch_pressed_down;
     // Update is called once per frame
@@ -24,6 +25,7 @@ public class PlayerInput : MonoBehaviour
         switch_pressed_down = Input.GetKeyDown(KeyCode.Q);
         switch_pressed_up = Input.GetKeyDown(KeyCode.E);
         reload = Input.GetKeyDown(KeyCode.R);
+        use = Input.GetKey(KeyCode.F);
         if (switch_pressed_down) {
             switch_pressed = -1;
         }
