@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ItemInteractable : Interactable
 {
-    Item item;
+    [SerializeField] Item item;
     public override void Activate()
     {
         base.Activate();
