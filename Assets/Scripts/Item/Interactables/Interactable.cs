@@ -6,7 +6,7 @@ public class Interactable : MonoBehaviour
 {
     public State current_state;
     public AudioClip use;
-    AudioSource sound;
+    protected AudioSource sound;
     public enum State {
         Interacted,
         Uninteracted

@@ -6,13 +6,11 @@ public class DoorInteractable : Interactable
 {
     public bool locked {get ; private set;}
     Animator animator;
-    AudioSource sound;
     AudioClip open;
     AudioClip close;
 
     void Start() {
         animator = GetComponent<Animator>();
-        sound = GetComponent<AudioSource>();
     }
 
     public override void Activate()
@@ -20,7 +18,7 @@ public class DoorInteractable : Interactable
         base.Activate();
         if (!locked) {
             animator.Play("open");
-            sound.PlayOneShot(open);
+            base.sound.PlayOneShot(open);
         }
     }
 
@@ -28,6 +26,6 @@ public class DoorInteractable : Interactable
     {
         base.Deactivate();
         animator.Play("close");
-        sound.PlayOneShot(close);
+        base.sound.PlayOneShot(close);
     }
 }
