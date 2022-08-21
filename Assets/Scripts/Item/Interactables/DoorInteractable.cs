@@ -18,7 +18,9 @@ public class DoorInteractable : Interactable
         base.Activate();
         if (!locked) {
             animator.Play("open");
-            base.sound.PlayOneShot(open);
+            if (base.sound) {
+                base.sound.PlayOneShot(open);
+            }
         }
     }
 
@@ -26,6 +28,8 @@ public class DoorInteractable : Interactable
     {
         base.Deactivate();
         animator.Play("close");
-        base.sound.PlayOneShot(close);
+        if (base.sound) {
+            base.sound.PlayOneShot(close);
+        }
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
+    public string interactionName;
     public State current_state;
     public AudioClip use;
     protected AudioSource sound;
@@ -32,6 +33,7 @@ public class Interactable : MonoBehaviour
 
         if (being) {
             if (being._input.use && IsNotAlreadyInteractedWith) {
+                being.SetNearestInteraction("");
                 current_state = State.Interacted;
             }
         }
@@ -70,11 +72,13 @@ public class Interactable : MonoBehaviour
     }
 
     public virtual void OnEnterTrigger() {
-
+        if (current_state != State.Interacted) {
+            being.SetNearestInteraction(interactionName);
+        }
     }
 
     public virtual void OnLeaveTrigger() {
-
+        being.SetNearestInteraction("");
     }
 
     public virtual void GivePlayer(Item item) {
