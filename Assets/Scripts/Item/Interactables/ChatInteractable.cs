@@ -6,8 +6,14 @@ public class ChatInteractable : Interactable
 {
     public string chat_name;
     public List<string> dialogues;
-    public int current_dialogue;
-    public bool open;
+    int current_dialogue;
+    bool open;
+    Being npc;
+    BoxCollider _collider;
+
+    void Start() {
+        npc = GetComponentInParent<Being>();
+    }
 
     public override void Activate()
     {
@@ -19,5 +25,16 @@ public class ChatInteractable : Interactable
     {
         base.Deactivate();
         open = false;
+    }
+
+    public override void Check()
+    {
+        base.Check();
+        if (npc.health <= 0) {
+            transform.gameObject.SetActive(false);
+        }
+        else {
+            transform.gameObject.SetActive(true);
+        }
     }
 }

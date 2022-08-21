@@ -1988,6 +1988,42 @@ MonoBehaviour:
     m_HintWeight: 1
     m_MaintainTargetPositionOffset: 0
     m_MaintainTargetRotationOffset: 0
+--- !u!1 &253282449
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 253282450}
+  m_Layer: 5
+  m_Name: HUD_Objective
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &253282450
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253282449}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2124417919}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &261629816
 GameObject:
   m_ObjectHideFlags: 0
@@ -6496,7 +6532,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961216498}
-  m_LocalRotation: {x: 0.018189475, y: 0.000000013822404, z: -0.0000000035038887, w: 0.99983466}
+  m_LocalRotation: {x: 0.018189475, y: -0.000000017798058, z: 0.0000000035762049, w: 0.99983466}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8742,6 +8778,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1235332324}
   - component: {fileID: 1235332325}
+  - component: {fileID: 1235332326}
   m_Layer: 0
   m_Name: ChatTrigger
   m_TagString: Untagged
@@ -8775,8 +8812,28 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4.5, y: 1, z: 4.5}
+  m_Size: {x: 8, y: 1, z: 8}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1235332326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235332323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 858e469fc4f4ffc48a87451aa1808505, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionName: Fat Bum
+  current_state: 1
+  use: {fileID: 0}
+  chat_name: 
+  dialogues: []
+  current_dialogue: 0
+  open: 0
+  npc: {fileID: 0}
 --- !u!1 &1239868942
 GameObject:
   m_ObjectHideFlags: 0
@@ -15032,6 +15089,7 @@ RectTransform:
   m_Children:
   - {fileID: 236933794}
   - {fileID: 2022467243}
+  - {fileID: 253282450}
   m_Father: {fileID: 581938660}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -39911,7 +39969,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8423932191380985546, guid: e18e43b55b671bf43b88bc3c489474cd, type: 3}
       propertyPath: interactionName
-      value: Case Of Money
+      value: Money
       objectReference: {fileID: 0}
     - target: {fileID: 8423932191380985547, guid: e18e43b55b671bf43b88bc3c489474cd, type: 3}
       propertyPath: m_Name

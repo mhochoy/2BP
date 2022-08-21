@@ -13,7 +13,7 @@ public class Game : MonoBehaviour
     public GameUI ui;
     public Transform Player;
     public Transform Enemies;
-    List<Transform> _Enemies;
+    List<Transform> _Enemies = new List<Transform>();
     Being being; 
     
 

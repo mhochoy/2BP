@@ -32,7 +32,7 @@ public class Interactable : MonoBehaviour
         col.TryGetComponent<Being>(out being);
 
         if (being) {
-            if (being._input.use && IsNotAlreadyInteractedWith) {
+            if (being._input && being._input.use && IsNotAlreadyInteractedWith) {
                 being.SetNearestInteraction("");
                 current_state = State.Interacted;
             }
@@ -56,6 +56,8 @@ public class Interactable : MonoBehaviour
         if (current_state == State.Uninteracted) {
             Deactivate();
         }
+
+        Check();
     }
 
 
@@ -79,6 +81,10 @@ public class Interactable : MonoBehaviour
 
     public virtual void OnLeaveTrigger() {
         being.SetNearestInteraction("");
+    }
+
+    public virtual void Check() {
+        // Update
     }
 
     public virtual void GivePlayer(Item item) {
