@@ -33,7 +33,10 @@ public class Interactable : MonoBehaviour
 
         if (being) {
             if (being._input && being._input.use && IsNotAlreadyInteractedWith) {
-                being.SetNearestInteraction("");
+                if (sound) {
+                    sound.PlayOneShot(use);
+                }
+                being.SetNearestInteraction(this);
                 current_state = State.Interacted;
             }
         }
@@ -47,7 +50,7 @@ public class Interactable : MonoBehaviour
         }
     }
     // Update
-    void Update()
+    protected virtual void Update()
     {
         if (current_state == State.Interacted) {
             Activate();
@@ -62,34 +65,35 @@ public class Interactable : MonoBehaviour
 
 
     // Custom Interactable Methods
-    public virtual void Activate() {
+    protected virtual void Activate() {
         // Activate
-        if (sound) {
-            sound.PlayOneShot(use);
-        }
     }
 
-    public virtual void Deactivate() {
+    protected virtual void Deactivate() {
         // Deactivate
     }
 
-    public virtual void OnEnterTrigger() {
+    protected virtual void OnEnterTrigger() {
         if (current_state != State.Interacted) {
-            being.SetNearestInteraction(interactionName);
+            being.SetNearestInteraction(this);
         }
     }
 
-    public virtual void OnLeaveTrigger() {
-        being.SetNearestInteraction("");
+    protected virtual void OnLeaveTrigger() {
+        being.SetNearestInteraction(null);
     }
 
-    public virtual void Check() {
+    protected virtual void Check() {
         // Update
     }
 
-    public virtual void GivePlayer(Item item) {
+    protected virtual void GivePlayer(Item item) {
         if (being) {
             being.AddItemToInventory(item);
         }
+    }
+
+    protected Being GetBeing() {
+        return being;
     }
 }

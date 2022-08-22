@@ -13,7 +13,8 @@ public class Being : MonoBehaviour
     Vector3 direction;
     CharacterController _controller;
     Inventory inventory;
-    string nearestInteractable;
+    Interactable nearestInteractable;
+    int points;
     public PlayerInput _input;
     public bool isActive;
     public int health;
@@ -89,6 +90,7 @@ public class Being : MonoBehaviour
             health -= value;
         }
         else {
+            health = 0;
             // Handle death
             if (isAI) {
                 
@@ -207,6 +209,10 @@ public class Being : MonoBehaviour
         }
     }
 
+    public void AddScore(int value) {
+        points += value; 
+    }
+
     public string GetItemStats() {
         bool IHaveAnItemAndItIsAWeapon = (inventory.current_item && inventory.current_item is Weapon);
         bool IHaveAnItemAndItsARegularItem = (inventory.current_item && inventory.current_item is Item);
@@ -220,11 +226,11 @@ public class Being : MonoBehaviour
         return "";
     }
 
-    public void SetNearestInteraction(string name) {
-        nearestInteractable = name;
+    public void SetNearestInteraction(Interactable interactable) {
+        nearestInteractable = interactable;
     }
 
-    public string GetNearestInteraction() {
+    public Interactable GetNearestInteraction() {
         return nearestInteractable;
     }
 }

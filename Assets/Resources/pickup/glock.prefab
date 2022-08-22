@@ -50,7 +50,7 @@ MonoBehaviour:
   UseEffect: {fileID: 203535138716394578}
   l_handle: {fileID: 0}
   r_handle: {fileID: 203535137873743225}
-  _UseSound: {fileID: 8300000, guid: 7c30d5183ad46294981e432796ae431a, type: 3}
+  _UseSound: {fileID: 8300000, guid: 8e14b3ae0e8bdbe43ab58e14d703d5c6, type: 3}
   _EffectPoint: {fileID: 203535138839629647}
   ClickToUse: 0
   Damage: 20

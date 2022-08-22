@@ -30,9 +30,31 @@ public class Game : MonoBehaviour
 
     void HandleUI(Transform player) {
         if (being) {
+            Interactable interactable = being.GetNearestInteraction();
+
             ui.SetHealth(being.health);
             ui.SetAmmoText(being.GetItemStats());
-            ui.SetInteractableText(being.GetNearestInteraction());
+            HandleInteractableUI(interactable);
+        }
+    }
+
+    void HandleInteractableUI(Interactable interactable) {
+        if (interactable) {
+            if (interactable is ChatInteractable) {
+                ChatInteractable chatInteraction = (ChatInteractable)interactable;
+                if (chatInteraction.npc.health <= 0) {
+                    ui.SetInteractableText("");
+                    return;
+                }
+            }
+            if (interactable.current_state == Interactable.State.Interacted) {
+                ui.SetInteractableText("");
+                return;
+            }
+            ui.SetInteractableText(interactable.interactionName);
+        }
+        else {
+            ui.SetInteractableText("");
         }
     }
 
