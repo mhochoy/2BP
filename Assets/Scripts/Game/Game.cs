@@ -23,9 +23,24 @@ public class Game : MonoBehaviour
 
     void Update()
     {
+        HandlePauseMenu(being._input.paused);
         HandleGameState();
         HandleUI(Player);
         SyncInternalEnemiesList();
+    }
+
+    void HandlePauseMenu(bool active) {
+        if (active) {
+            if (!ui.IsPauseMenuActive()) {
+                ui.EnablePauseMenu();
+            }
+            
+        }
+        else {
+            if (ui.IsPauseMenuActive()) {
+                ui.DisablePauseMenu();
+            }
+        }
     }
 
     void HandleUI(Transform player) {

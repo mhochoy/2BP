@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
+    public GameObject Menu;
     public TMPro.TMP_Text InteractableText;
     public TMPro.TMP_Text AmmoText;
     public TMPro.TMP_Text MoneyText;
@@ -24,5 +25,19 @@ public class GameUI : MonoBehaviour
 
     public void SetMoneyText(string text) {
         MoneyText.text = text;
+    }
+
+    public void EnablePauseMenu() {
+        Time.timeScale = 0f;
+        Menu.SetActive(true);
+    }
+
+    public void DisablePauseMenu() {
+        Time.timeScale = 1;
+        Menu.SetActive(false);
+    }
+
+    public bool IsPauseMenuActive() {
+        return Menu.activeInHierarchy;
     }
 }
