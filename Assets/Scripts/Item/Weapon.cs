@@ -9,13 +9,13 @@ public class Weapon : Item
     public int Clips;
     public int Range;
     public int Force;
+    public int Bullets {get; private set;}
     [SerializeField] private float fire_rate;
     [SerializeField] private AudioClip _ReloadSound;
     [SerializeField] private GameObject _HitEffect;
     [SerializeField] private LayerMask _PlayerLayer;
     GameObject _hit_effect;
     ParticleSystem _hit_particle;
-    int bullets;
     float last_fired;
 
     public override void Awake()
@@ -27,19 +27,19 @@ public class Weapon : Item
             _hit_effect = Instantiate(_HitEffect);
             _hit_particle = _hit_effect.GetComponent<ParticleSystem>();
         }
-        bullets = MaxBullets;
+        Bullets = MaxBullets;
     }
 
     public override void Use()
     {
-        if (bullets > 0) {
+        if (Bullets > 0) {
             Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0));
             RaycastHit hit;
             
             if (ClickToUse) {
                 base.Use();
                 SendBulletRaycast(ray, out hit);
-                bullets--;
+                Bullets--;
                 return;
             }
             last_fired += Time.deltaTime;
@@ -48,7 +48,7 @@ public class Weapon : Item
                 last_fired = 0;
                 SendBulletRaycast(ray, out hit);
                 base.Use();
-                bullets--;
+                Bullets--;
             }
         }
     }
@@ -81,7 +81,7 @@ public class Weapon : Item
         if (Clips > 0) {
             PlayItemSound(_ReloadSound);
             Clips--;
-            this.bullets = MaxBullets;
+            this.Bullets = MaxBullets;
         }
     }
 }

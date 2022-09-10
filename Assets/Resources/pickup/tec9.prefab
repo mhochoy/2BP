@@ -854,7 +854,7 @@ MonoBehaviour:
   UseEffect: {fileID: 7412157054159731965}
   l_handle: {fileID: 0}
   r_handle: {fileID: 0}
-  _UseSound: {fileID: 8300000, guid: dca326fd879d89848931f2e60d1f5ada, type: 3}
+  _UseSound: {fileID: 8300000, guid: eae10781de6507a43bc6aa6c79af8341, type: 3}
   _EffectPoint: {fileID: 5790232146868445479}
   ClickToUse: 0
   Damage: 9

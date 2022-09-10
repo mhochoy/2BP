@@ -72,6 +72,7 @@ public class Inventory : MonoBehaviour
                 return true;
             }
         }
+
         return false;
     }
 
@@ -102,6 +103,7 @@ public class Inventory : MonoBehaviour
                 if (_item is Weapon) {
                     Weapon weapon = (Weapon)_item;
                     weapon.GiveAmmo(1);
+                    return;
                 }
             }
             item.transform.parent = items_parent;

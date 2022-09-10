@@ -11,12 +11,21 @@ public class PlayerInput : MonoBehaviour
     public bool shoot;
     public bool shoot_held;
     public bool reload;
+    bool esc;
+    public bool paused = false;
     public bool use;
     bool switch_pressed_up;
     bool switch_pressed_down;
     // Update is called once per frame
     void Update()
     {
+        esc = Input.GetKeyDown(KeyCode.Escape);
+        if (esc) {
+            paused = !paused;
+        }
+        if (paused) {
+            return;
+        }
         x = Input.GetAxis("Horizontal");
         z = Input.GetAxis("Vertical");
         shoot = Input.GetMouseButtonDown(0);
