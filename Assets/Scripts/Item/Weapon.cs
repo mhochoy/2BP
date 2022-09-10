@@ -78,7 +78,7 @@ public class Weapon : Item
     }
 
     public void Reload() {
-        if (Clips > 0) {
+        if (Clips > 0 && Bullets != MaxBullets) {
             PlayItemSound(_ReloadSound);
             Clips--;
             this.Bullets = MaxBullets;
