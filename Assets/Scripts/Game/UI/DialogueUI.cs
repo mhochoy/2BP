@@ -9,9 +9,6 @@ public class DialogueUI : MonoBehaviour
     public EventController TypingController;
     public Image DialogueImage;
 
-    void Start() {
-    }
-
     public void StartDialogue(Event dialogueEvent) {
         gameObject.SetActive(true);
         TypingController.actualEvent = dialogueEvent;

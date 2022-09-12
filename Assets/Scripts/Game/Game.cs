@@ -84,10 +84,6 @@ public class Game : MonoBehaviour
         }
     }
 
-    public List<Transform> GetEnemies() {
-        return _Enemies;
-    }
-
     void SyncInternalEnemiesList() {
         if (Enemies.childCount != _Enemies.Count) {
             foreach (Transform enemy in Enemies) {

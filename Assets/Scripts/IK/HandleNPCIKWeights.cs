@@ -15,15 +15,17 @@ public class HandleNPCIKWeights : MonoBehaviour
     void Update()
     {
         if (Activate) {
+            bool TargetIsWithinRange = Vector3.Distance(transform.position, target.position) < _lookDistance;
+            bool TargetIsNotWithinRange = Vector3.Distance(transform.position, target.position) > _lookDistance;
             deactivated = false;
-            if (Vector3.Distance(transform.position, target.position) < _lookDistance) {
+            if (TargetIsWithinRange) {
                 if (_BodyRig) {
                     _BodyRig.weight = .75f;
                 }
                 gameObject.transform.LookAt(Vector3.Slerp(transform.position, target.position, 2f), Vector3.up);
                 LockOnActive = true;
             }
-            else if (Vector3.Distance(transform.position, target.position) > _lookDistance) {
+            else if (TargetIsNotWithinRange) {
                 if (_BodyRig) {
                     _BodyRig.weight = 0;
                 }

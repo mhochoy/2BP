@@ -58,9 +58,6 @@ public class HandleRagdoll : MonoBehaviour
                 }
                 return true;
             }
-            if (bodies.Length <= 1) {
-                return false;
-            }
             else {
                 return false;
             }
