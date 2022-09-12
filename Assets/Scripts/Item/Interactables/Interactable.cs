@@ -53,6 +53,11 @@ public class Interactable : MonoBehaviour
     protected virtual void Update()
     {
         if (current_state == State.Interacted) {
+            bool done = false;
+            if (!done) {
+                done = true;
+                OnActivate();
+            }
             Activate();
         }
 
@@ -61,6 +66,10 @@ public class Interactable : MonoBehaviour
         }
 
         Check();
+    }
+
+    protected virtual void OnActivate() {
+
     }
 
 

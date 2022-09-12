@@ -9,7 +9,6 @@ public class ChatInteractable : Interactable
     public List<Event> dialogues;
     List<Event> completedDialogues = new List<Event>();
     DialogueUI dialogueUI;
-    int current_dialogue = 0;
     [SerializeField] bool working = false;
     [SerializeField] Material NPCDialogueMaterial;
 
@@ -30,7 +29,6 @@ public class ChatInteractable : Interactable
     {
         base.Activate();
         dialogueUI.SetDialogueImageMaterial(NPCDialogueMaterial);
-        Tick();
     }
 
     void DisableDialogue() {
@@ -48,34 +46,35 @@ public class ChatInteractable : Interactable
         base.Check();
     }
 
-    private void Tick() {
+    protected override void OnActivate()
+    {
+        base.OnActivate();
         if (!working) {
             RunDialogue();
         }
     }
 
     void RunDialogue() {
-        foreach (Event dialogue in dialogues) {
-            if (!completedDialogues.Contains(dialogue)) {
-                StartCoroutine(ShowDialogue(dialogue));
-            }
-            break;
-        }
+        StartCoroutine(ShowDialogue());
     }
 
-    private IEnumerator ShowDialogue(Event dialogue) {
+    private IEnumerator ShowDialogue() {
         working = true;
-        // do stuff here, show win screen, etc.
-        dialogueUI.StartDialogue(dialogue);
-        // just a simple time delay as an example
-        yield return new WaitForSeconds(2.5f);
-        // wait for player to press F
-        yield return waitForKeyPress(KeyCode. F); // wait for this function to return
-        // do other stuff after key press
-        completedDialogues.Add(dialogue);
-        dialogueUI.TypingController.Reset();
-        DisableDialogue();
-        working = false;
+        foreach (Event dialogue in dialogues) {
+            if (!completedDialogues.Contains(dialogue)) {
+                // do stuff here, show win screen, etc.
+                dialogueUI.StartDialogue(dialogue);
+                // just a simple time delay as an example
+                yield return new WaitForSeconds(2.5f);
+                completedDialogues.Add(dialogue);
+                // wait for player to press F
+                yield return waitForKeyPress(KeyCode. F); // wait for this function to return
+                // do other stuff after key press
+                dialogueUI.TypingController.Reset();
+                DisableDialogue();
+                working = false;
+            }
+        }
     }
     
     private IEnumerator waitForKeyPress(KeyCode key)

@@ -58,8 +58,6 @@ public class Weapon : Item
             Being _being;
             hit.transform.TryGetComponent<Being>(out _being);
             if (hit.rigidbody) {
-                //hit.rigidbody.AddForce(transform.forward * Force, ForceMode.Impulse);
-                
                 hit.rigidbody.AddForceAtPosition(-hit.transform.forward * Force, hit.point, ForceMode.Impulse);
             }
             if (_being && _being.isActive) {
