@@ -57,19 +57,26 @@ public class Weapon : Item
         if (Physics.Raycast(ray, out hit, Range, ~_PlayerLayer)) {
             Being _being;
             hit.transform.TryGetComponent<Being>(out _being);
-            if (hit.rigidbody) {
-                //hit.rigidbody.AddForce(transform.forward * Force, ForceMode.Impulse);
-                
-                hit.rigidbody.AddForceAtPosition(-hit.transform.forward * Force, hit.point, ForceMode.Impulse);
-            }
-            if (_being && _being.isActive) {
-                _being.Damage(Damage);
-            }
-            if (_HitEffect) {
-                _hit_effect.transform.position = hit.point;
-                _hit_effect.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-                _hit_particle.Play();
-            }
+
+            Hit(_being, hit);
+            PlayHitEffect(hit.point, hit.normal);
+        }
+    }
+
+    void Hit(Being being, RaycastHit hit) {
+        if (hit.rigidbody) {
+            hit.rigidbody.AddForceAtPosition(-hit.transform.forward * Force, hit.point, ForceMode.Impulse);
+        }
+        if (being && being.isActive) {
+            being.Damage(Damage);
+        }
+    }
+
+    void PlayHitEffect(Vector3 point, Vector3 normal) {
+        if (_HitEffect) {
+            _hit_effect.transform.position = point;
+            _hit_effect.transform.rotation = Quaternion.FromToRotation(Vector3.up, normal);
+            _hit_particle.Play();
         }
     }
 

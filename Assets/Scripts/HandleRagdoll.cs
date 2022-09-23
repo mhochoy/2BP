@@ -17,9 +17,9 @@ public class HandleRagdoll : MonoBehaviour
     {
         if (bodies.Length > 1) 
         {
+            Collider _col;
             foreach (Rigidbody body in bodies)
             {
-                Collider _col;
                 body.TryGetComponent<Collider>(out _col);
                 if (_col && !_col.enabled) {
                     _col.enabled = true;
@@ -43,10 +43,10 @@ public class HandleRagdoll : MonoBehaviour
         if (bodies != null) {
             if (bodies.Length > 1) 
             {
+                Collider _col;
+                CharacterJoint _joint;
                 foreach (Rigidbody body in bodies)
                 {
-                    Collider _col;
-                    CharacterJoint _joint;
                     body.TryGetComponent<Collider>(out _col);
                     body.gameObject.TryGetComponent<CharacterJoint>(out _joint);
                     if (_col && !_col.enabled) 

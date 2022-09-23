@@ -32,14 +32,19 @@ public class Interactable : MonoBehaviour
         col.TryGetComponent<Being>(out being);
 
         if (being) {
-            if (being._input && being._input.use && IsNotAlreadyInteractedWith) {
-                if (sound) {
-                    sound.PlayOneShot(use);
-                }
-                being.SetNearestInteraction(this);
-                current_state = State.Interacted;
+            bool BeingTryingToInteractAndImUninteractedWith = being._input && being._input.use && IsNotAlreadyInteractedWith;
+            if (BeingTryingToInteractAndImUninteractedWith) {
+                Interact();
             }
         }
+    }
+
+    void Interact() {
+        if (sound) {
+            sound.PlayOneShot(use);
+        }
+        being.SetNearestInteraction(this);
+        current_state = State.Interacted;
     }
 
     void OnTriggerExit(Collider col) {

@@ -9,8 +9,7 @@ public class ChatInteractable : Interactable
     public List<Event> dialogues;
     List<Event> completedDialogues = new List<Event>();
     DialogueUI dialogueUI;
-    int current_dialogue = 0;
-    [SerializeField] bool working = false;
+    bool working = false;
     [SerializeField] Material NPCDialogueMaterial;
 
     void Start() {
@@ -64,14 +63,22 @@ public class ChatInteractable : Interactable
     }
 
     private IEnumerator ShowDialogue(Event dialogue) {
-        working = true;
         // do stuff here, show win screen, etc.
-        dialogueUI.StartDialogue(dialogue);
+        StartDialogue(dialogue);
         // just a simple time delay as an example
         yield return new WaitForSeconds(2.5f);
         // wait for player to press F
         yield return waitForKeyPress(KeyCode. F); // wait for this function to return
         // do other stuff after key press
+        ClearDialogue(dialogue);
+    }
+
+    private void StartDialogue(Event dialogue) {
+        working = true;
+        dialogueUI.StartDialogue(dialogue);
+    }
+
+    private void ClearDialogue(Event dialogue) {
         completedDialogues.Add(dialogue);
         dialogueUI.TypingController.Reset();
         DisableDialogue();

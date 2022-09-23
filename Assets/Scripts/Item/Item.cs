@@ -14,14 +14,20 @@ public class Item : MonoBehaviour
     AudioSource _audio;
     float originalVolume;
     float originalPitch;
-    public virtual void Awake() {
-        TryGetComponent<AudioSource>(out _audio);
 
+
+    void SetupSound() {
         if (_audio) {
             originalPitch = _audio.pitch;
             originalVolume = _audio.volume;
             _audio.clip = _UseSound;
         }
+    }
+
+    public virtual void Awake() {
+        TryGetComponent<AudioSource>(out _audio);
+
+        SetupSound();
     }
 
     public void FixedUpdate() {
@@ -30,18 +36,26 @@ public class Item : MonoBehaviour
         }
     }
     public virtual void Use() {
-        if (_audio) {
-            _audio.pitch = Random.Range(originalPitch - .075f, originalPitch + .075f);
-            _audio.volume = Random.Range(originalVolume - .075f, originalVolume + .075f);
-            _audio.Play();
-        }
+        PlayItemEffect();
+        PlayItemSound();
+    }
+
+    public bool IsClickToUse() {
+        return ClickToUse;
+    }
+
+    void PlayItemEffect() {
         if (UseEffect) {
             UseEffect.Play();
         }
     }
 
-    public bool IsClickToUse() {
-        return ClickToUse;
+    void PlayItemSound() {
+        if (_audio) {
+            _audio.pitch = Random.Range(originalPitch - .075f, originalPitch + .075f);
+            _audio.volume = Random.Range(originalVolume - .075f, originalVolume + .075f);
+            _audio.Play();
+        }
     }
 
     protected void PlayItemSound(AudioClip sound) {

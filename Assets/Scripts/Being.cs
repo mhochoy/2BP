@@ -91,9 +91,7 @@ public class Being : MonoBehaviour
         }
         else {
             health = 0;
-            // Handle death
             if (isAI) {
-                
                 Die();
             }
         }
