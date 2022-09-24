@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class Item : MonoBehaviour
 {
@@ -11,10 +12,12 @@ public class Item : MonoBehaviour
     [SerializeField] protected AudioClip _UseSound;
     [SerializeField] protected Transform _EffectPoint;
     [SerializeField] protected bool ClickToUse;
+    CinemachineImpulseSource recoil;
     AudioSource _audio;
     float originalVolume;
     float originalPitch;
     public virtual void Awake() {
+        TryGetComponent<CinemachineImpulseSource>(out recoil);
         TryGetComponent<AudioSource>(out _audio);
 
         if (_audio) {
@@ -37,6 +40,9 @@ public class Item : MonoBehaviour
         }
         if (UseEffect) {
             UseEffect.Play();
+        }
+        if (recoil) {
+            recoil.GenerateImpulse();
         }
     }
 

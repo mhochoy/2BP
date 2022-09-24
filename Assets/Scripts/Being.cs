@@ -59,9 +59,14 @@ public class Being : MonoBehaviour
         }
         // Handle human movement
         if (!isAI) {
+            Move(_input.x, _input.z);
+        }
+    }
+
+    void Update() {
+        if (!isAI) {
             var item = inventory.current_item;
             bool _HasAnItemThatIsntTheDefaultOne = inventory.HasAnItem();
-            Move(_input.x, _input.z);
             
             if (_HasAnItemThatIsntTheDefaultOne) {
                 // Handle Use
@@ -72,11 +77,7 @@ public class Being : MonoBehaviour
                     Use(_input.shoot_held);
                 }
             }
-        }
-    }
 
-    void Update() {
-        if (!isAI) {
             if (inventory && inventory.Count() > 1) {
                 Swap(_input.switch_axis);
             }

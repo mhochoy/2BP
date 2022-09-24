@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class Weapon : Item
 {
@@ -32,24 +33,27 @@ public class Weapon : Item
 
     public override void Use()
     {
-        if (Bullets > 0) {
-            Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0));
-            RaycastHit hit;
-            
-            if (ClickToUse) {
-                base.Use();
-                SendBulletRaycast(ray, out hit);
-                Bullets--;
-                return;
-            }
-            last_fired += Time.deltaTime;
-        
-            if (last_fired > fire_rate && !ClickToUse) {
-                last_fired = 0;
-                SendBulletRaycast(ray, out hit);
-                base.Use();
-                Bullets--;
-            }
+        if (Bullets > 0) {            
+            Fire();
+        }
+    }
+
+    void Fire() {
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0));
+        RaycastHit hit;
+        last_fired += Time.deltaTime;
+
+        if (ClickToUse) {
+            SendBulletRaycast(ray, out hit);
+            base.Use();
+            Bullets--;
+            return;
+        }
+        else if (last_fired > fire_rate && !ClickToUse) {
+            last_fired = 0;
+            SendBulletRaycast(ray, out hit);
+            base.Use();
+            Bullets--;
         }
     }
 
