@@ -28,6 +28,10 @@ public class Game : MonoBehaviour
             ui.DisablePauseMenu();
             return;
         }
+        if (current_state == State.Complete) {
+            Debug.Log("Level Complete!");
+            // Load in next level or cutscene
+        }
         HandleUI();
         HandleGameOverState();
         HandlePauseMenu(being._input.paused);

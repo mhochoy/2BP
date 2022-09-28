@@ -10,7 +10,7 @@ public class ChainInteractables : MonoBehaviour
     bool done;
 
     void Update() {
-        bool MainInteractionsAreCompleted = mainInteractables.TrueForAll( (Interactable interactable) => {return interactable.current_state == Interactable.State.Interacted;} );
+        bool MainInteractionsAreCompleted = mainInteractables.TrueForAll( (Interactable interactable) => {return interactable.current_state == Interactable.State.Interacted;} ) || mainInteractables.Count == 0;
         bool EnemiesAreDefeated = true;
 
         if (enemyInteractables.Count > 0) {
