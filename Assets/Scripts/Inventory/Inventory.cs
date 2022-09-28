@@ -10,6 +10,9 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Animator _RigAnimator;
     [SerializeField] private List<Item> items;
     [SerializeField] private Transform items_parent;
+    [SerializeField] private AudioClip weapon_pickup_sound;
+    [SerializeField] private AudioClip pickup_sound;
+    [SerializeField] private AudioSource sound;
     public Item current_item;
     int internal_item_index = 0;
 
@@ -102,14 +105,17 @@ public class Inventory : MonoBehaviour
                 Item _item = GetItem(item.item_name);
                 if (_item is Weapon) {
                     Weapon weapon = (Weapon)_item;
+                    sound.PlayOneShot(weapon_pickup_sound);
                     weapon.GiveAmmo(1);
-                    return;
                 }
             }
-            item.transform.parent = items_parent;
-            item.transform.localPosition = Vector3.zero;
-            item.transform.localRotation = Quaternion.identity;
-            items.Add(item);
+            else {
+                sound.PlayOneShot(pickup_sound);
+                item.transform.parent = items_parent;
+                item.transform.localPosition = Vector3.zero;
+                item.transform.localRotation = Quaternion.identity;
+                items.Add(item);
+            }
         }
     }
 

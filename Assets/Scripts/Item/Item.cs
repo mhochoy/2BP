@@ -16,6 +16,7 @@ public class Item : MonoBehaviour
     AudioSource _audio;
     float originalVolume;
     float originalPitch;
+
     public virtual void Awake() {
         TryGetComponent<CinemachineImpulseSource>(out recoil);
         TryGetComponent<AudioSource>(out _audio);
@@ -51,6 +52,12 @@ public class Item : MonoBehaviour
     }
 
     protected void PlayItemSound(AudioClip sound) {
+        _audio.PlayOneShot(sound);
+    }
+
+    protected void PlayEditedItemSound(AudioClip sound) {
+        _audio.pitch = Random.Range(originalPitch - .075f, originalPitch + .075f);
+        _audio.volume = Random.Range(originalVolume - .075f, originalVolume + .075f);
         _audio.PlayOneShot(sound);
     }
 }

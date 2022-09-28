@@ -23,9 +23,16 @@ public class Game : MonoBehaviour
 
     void Update()
     {
+        if (ui.IsGameOverMenuActive()) {
+            ui.HideHUD();
+            ui.DisablePauseMenu();
+            return;
+        }
+        HandleUI();
+        HandleGameOverState();
         HandlePauseMenu(being._input.paused);
         HandleGameState();
-        HandleUI(Player);
+        
         SyncInternalEnemiesList();
     }
 
@@ -43,7 +50,7 @@ public class Game : MonoBehaviour
         }
     }
 
-    void HandleUI(Transform player) {
+    void HandleUI() {
         if (being) {
             Interactable interactable = being.GetNearestInteraction();
 
@@ -70,6 +77,12 @@ public class Game : MonoBehaviour
         }
         else {
             ui.SetInteractableText("");
+        }
+    }
+
+    void HandleGameOverState() {
+        if (!being.isActive && !ui.IsGameOverMenuActive()) {
+            ui.EnableGameOverMenu();
         }
     }
 

@@ -13,6 +13,7 @@ public class Logic : MonoBehaviour
         Chasing,
     }
     Transform target;
+    Being target_being;
 
     void Start() {
         current_state = State.Idle;
@@ -26,6 +27,11 @@ public class Logic : MonoBehaviour
 
         if (being && being.IsLockedOn()) {
             target = being.GetTarget();
+            target.TryGetComponent<Being>(out target_being);
+            if (target_being && !target_being.isActive) {
+                // Target is dead
+                current_state = State.Idle;
+            }
         }
 
         switch (current_state) {
@@ -38,6 +44,12 @@ public class Logic : MonoBehaviour
             case State.Chasing:
                 being.Move(target.position);
                 being.Swap(1);
+                if (being.HasAnItem()) {
+                    int decision = UnityEngine.Random.Range(0, 12);
+                    if (decision <= 3) {
+                        being.Use(true);
+                    }
+                }
                 break;
             default:
                 current_state = State.Idle;
