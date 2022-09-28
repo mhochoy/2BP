@@ -75,6 +75,9 @@ public class Weapon : Item
         if (Physics.Raycast(ray, out hit, Range, _FirePoint ? _PlayerLayer : ~_PlayerLayer)) {
             Being _being;
             hit.transform.TryGetComponent<Being>(out _being);
+            if (!_being) {
+                hit.transform.GetComponentInParent<Being>();
+            }
             if (hit.rigidbody) {
                 hit.rigidbody.AddForceAtPosition(-hit.transform.forward * Force, hit.point, ForceMode.Impulse);
             }
@@ -91,6 +94,8 @@ public class Weapon : Item
                     _being.Damage(Damage);
                     SpawnHitEffect(hit.point, hit.normal);
                 }
+
+                Debug.Log(hit.transform.name);
             }
         }
     }

@@ -45,7 +45,7 @@ public class Logic : MonoBehaviour
                 being.Move(target.position);
                 being.Swap(1);
                 if (being.HasAnItem()) {
-                    int decision = UnityEngine.Random.Range(0, 12);
+                    int decision = UnityEngine.Random.Range(0, 25);
                     if (decision <= 3) {
                         being.Use(true);
                     }
