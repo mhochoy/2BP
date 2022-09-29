@@ -13,7 +13,7 @@ public class Logic : MonoBehaviour
         Chasing,
     }
     [Range(0,25)]
-    public int HitProbability;
+    public int ShootProbability;
     Transform target;
     Being target_being;
 
@@ -48,7 +48,7 @@ public class Logic : MonoBehaviour
                 being.Swap(1);
                 if (being.HasAnItem()) {
                     int decision = UnityEngine.Random.Range(0, 25);
-                    if (decision <= HitProbability) {
+                    if (decision <= ShootProbability) {
                         being.Use(true);
                     }
                 }
