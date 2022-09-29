@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class Weapon : Item
 {
@@ -10,10 +11,13 @@ public class Weapon : Item
     public int Range;
     public int Force;
     public int Bullets {get; private set;}
+    [SerializeField] private bool Infinity;
     [SerializeField] private float fire_rate;
     [SerializeField] private AudioClip _ReloadSound;
     [SerializeField] private GameObject _HitEffect;
     [SerializeField] private LayerMask _PlayerLayer;
+    [SerializeField] private AudioClip _HitSound;
+    [SerializeField] private Transform _FirePoint;
     GameObject _hit_effect;
     ParticleSystem _hit_particle;
     float last_fired;
@@ -32,43 +36,83 @@ public class Weapon : Item
 
     public override void Use()
     {
-        if (Bullets > 0) {
-            Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0));
-            RaycastHit hit;
-            
-            if (ClickToUse) {
-                base.Use();
-                SendBulletRaycast(ray, out hit);
-                Bullets--;
+        if (Bullets > 0) {            
+            Fire();
+        }
+    }
+
+    void Fire() {
+        Ray ray = new Ray();
+        if (!_FirePoint) {
+            ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0));
+        }
+        else if (_FirePoint) {
+            ray = new Ray(_FirePoint.position, _FirePoint.forward);
+        }
+        RaycastHit hit;
+        last_fired += Time.deltaTime;
+
+        if (ClickToUse) {
+            SendBulletRaycast(ray, out hit);
+            base.Use();
+            if (Infinity) {
                 return;
             }
-            last_fired += Time.deltaTime;
-        
-            if (last_fired > fire_rate && !ClickToUse) {
-                last_fired = 0;
-                SendBulletRaycast(ray, out hit);
-                base.Use();
-                Bullets--;
+            Bullets--;
+        }
+        else if (last_fired > fire_rate && !ClickToUse) {
+            last_fired = 0;
+            SendBulletRaycast(ray, out hit);
+            base.Use();
+            if (Infinity) {
+                return;
             }
+            Bullets--;
         }
     }
 
     public void SendBulletRaycast(Ray ray, out RaycastHit hit) {
-        if (Physics.Raycast(ray, out hit, Range, ~_PlayerLayer)) {
+        if (Physics.Raycast(ray, out hit, Range, _FirePoint ? _PlayerLayer : ~_PlayerLayer)) {
             Being _being;
             hit.transform.TryGetComponent<Being>(out _being);
+            if (!_being) {
+                hit.transform.GetComponentInParent<Being>();
+            }
             if (hit.rigidbody) {
                 hit.rigidbody.AddForceAtPosition(-hit.transform.forward * Force, hit.point, ForceMode.Impulse);
             }
             if (_being && _being.isActive) {
-                _being.Damage(Damage);
-            }
-            if (_HitEffect) {
-                _hit_effect.transform.position = hit.point;
-                _hit_effect.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-                _hit_particle.Play();
+                if (_FirePoint) {
+                    float decision = UnityEngine.Random.Range(0, 15);
+                    decision += (Vector3.Distance(hit.transform.position, _FirePoint.position) / 2) * 2;
+                    if (decision < 11f) {
+                        _being.Damage(Damage);
+                        SpawnHitEffect(hit.point, hit.normal);
+                    }
+                }
+                else {
+                    _being.Damage(Damage);
+                    SpawnHitEffect(hit.point, hit.normal);
+                }
+
+                Debug.Log(hit.transform.name);
             }
         }
+    }
+
+    void SpawnHitEffect(Vector3 point, Vector3 normal) {
+        if (_HitSound) {
+            Invoke("PlayHitSound", .075f);
+        }
+        if (_HitEffect) {
+            _hit_effect.transform.position = point;
+            _hit_effect.transform.rotation = Quaternion.FromToRotation(Vector3.up, normal);
+            _hit_particle.Play();
+        }
+    }
+
+    void PlayHitSound() {
+        PlayEditedItemSound(_HitSound);
     }
 
     public void GiveAmmo(int amount) {

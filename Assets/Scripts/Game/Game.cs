@@ -23,9 +23,20 @@ public class Game : MonoBehaviour
 
     void Update()
     {
+        if (ui.IsGameOverMenuActive()) {
+            ui.HideHUD();
+            ui.DisablePauseMenu();
+            return;
+        }
+        if (current_state == State.Complete) {
+            Debug.Log("Level Complete!");
+            // Load in next level or cutscene
+        }
+        HandleUI();
+        HandleGameOverState();
         HandlePauseMenu(being._input.paused);
         HandleGameState();
-        HandleUI(Player);
+        
         SyncInternalEnemiesList();
     }
 
@@ -43,7 +54,7 @@ public class Game : MonoBehaviour
         }
     }
 
-    void HandleUI(Transform player) {
+    void HandleUI() {
         if (being) {
             Interactable interactable = being.GetNearestInteraction();
 
@@ -70,6 +81,12 @@ public class Game : MonoBehaviour
         }
         else {
             ui.SetInteractableText("");
+        }
+    }
+
+    void HandleGameOverState() {
+        if (!being.isActive && !ui.IsGameOverMenuActive()) {
+            ui.EnableGameOverMenu();
         }
     }
 

@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.AI;
 using System;
 using UnityEngine.Animations.Rigging;
+using Cinemachine;
+
 public class Being : MonoBehaviour
 {
     Animator animator;
@@ -14,6 +16,9 @@ public class Being : MonoBehaviour
     CharacterController _controller;
     Inventory inventory;
     Interactable nearestInteractable;
+    CinemachineImpulseSource impulse;
+    float originalPitch;
+    float originalVolume;
     int points;
     public PlayerInput _input;
     public bool isActive;
@@ -23,14 +28,27 @@ public class Being : MonoBehaviour
     public float speed;
     [Range(0, 20)]
     public float gravity;
+    [SerializeField] private AudioSource BeingSound;
+    [SerializeField] private List<AudioClip> HitSounds;
+    [SerializeField] private AudioClip DeathSound;
     [SerializeField] private List<Rig> _NPCRigs;
     [SerializeField] private GameObject ItemTree; 
+    [SerializeField] private GameObject CameraTarget;
     
     void Awake() {
         isActive = true;
         animator = GetComponent<Animator>();
         inventory = GetComponent<Inventory>();
         TryGetComponent<PlayerInput>(out _input);
+        TryGetComponent<CinemachineImpulseSource>(out impulse);
+        TryGetComponent<HandleRagdoll>(out ragdoll);
+        if (ragdoll) {
+            ragdoll.DeactivateRagdoll();
+        }
+        if (BeingSound) {
+            originalPitch = BeingSound.pitch;
+            originalVolume = BeingSound.volume;
+        }
         if (_input) {
             _controller = GetComponent<CharacterController>();
         }
@@ -59,9 +77,14 @@ public class Being : MonoBehaviour
         }
         // Handle human movement
         if (!isAI) {
+            Move(_input.x, _input.z);
+        }
+    }
+
+    void Update() {
+        if (!isAI) {
             var item = inventory.current_item;
             bool _HasAnItemThatIsntTheDefaultOne = inventory.HasAnItem();
-            Move(_input.x, _input.z);
             
             if (_HasAnItemThatIsntTheDefaultOne) {
                 // Handle Use
@@ -72,11 +95,7 @@ public class Being : MonoBehaviour
                     Use(_input.shoot_held);
                 }
             }
-        }
-    }
 
-    void Update() {
-        if (!isAI) {
             if (inventory && inventory.Count() > 1) {
                 Swap(_input.switch_axis);
             }
@@ -88,18 +107,30 @@ public class Being : MonoBehaviour
     public virtual void Damage(int value) {
         if (health - value > 0) {
             health -= value;
+            if (BeingSound) {
+                int decision = UnityEngine.Random.Range(0, HitSounds.Count + 2);
+                if (decision < HitSounds.Count) {
+                    PlayEditedBeingSound(HitSounds[decision]);
+                }
+            }
+            if (impulse) {
+                impulse.GenerateImpulse();
+            }
         }
         else {
             health = 0;
-            // Handle death
-            if (isAI) {
-                
-                Die();
+            if (impulse) {
+                impulse.m_DefaultVelocity.y = impulse.m_DefaultVelocity.y * 4;
+                impulse.GenerateImpulse();
             }
+            Die();
         }
     }
 
     void Die() {
+        if (BeingSound) {
+            PlayEditedBeingSound(DeathSound);
+        }
         if (ItemTree) {
             ItemTree.SetActive(false);
         }
@@ -113,15 +144,19 @@ public class Being : MonoBehaviour
                 inventory.DropItem();
             }
             _NPCIKWeights.Deactivate();
-            animator.enabled = false;
             _agent.enabled = false;
-            ragdoll.ActivateRagdoll();
-            isActive = false;
-            enabled = false;
         }
-        else {
-
+        else if (!isAI) {
+            if (CameraTarget) {
+                CameraTarget.transform.parent = null;
+            }
+            _controller.enabled = false;
         }
+        
+        ragdoll.ActivateRagdoll();
+        animator.enabled = false;
+        isActive = false;
+        enabled = false;
     }
 
     public virtual void Move(float x, float y) {
@@ -203,6 +238,13 @@ public class Being : MonoBehaviour
         }
     }
 
+    public bool HasAnItem() {
+        if (inventory) {
+            return inventory.HasAnItem();
+        }
+        return false;
+    }
+
     public void AddItemToInventory(Item item) {
         if (HasInventory()) {
             inventory.GiveItem(item);
@@ -232,5 +274,12 @@ public class Being : MonoBehaviour
 
     public Interactable GetNearestInteraction() {
         return nearestInteractable;
+    }
+
+    protected void PlayEditedBeingSound(AudioClip sound) {
+        BeingSound.pitch = UnityEngine.Random.Range(originalPitch - .075f, originalPitch + .075f);
+        BeingSound.volume = UnityEngine.Random.Range(originalVolume - .075f, originalVolume + .075f);
+        BeingSound.clip = sound;
+        BeingSound.Play();
     }
 }
