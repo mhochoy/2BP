@@ -57,8 +57,9 @@ MonoBehaviour:
   Damage: 20
   MaxBullets: 10
   Clips: 2
-  Range: 25
+  Range: 250
   Force: 40
+  AIHitChance: 0
   Infinity: 0
   fire_rate: 0.07
   _ReloadSound: {fileID: 8300000, guid: 7207cb1685f8a934ab53bec618f50f08, type: 3}

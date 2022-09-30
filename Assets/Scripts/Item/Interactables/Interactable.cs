@@ -7,6 +7,7 @@ public class Interactable : MonoBehaviour
     public string interactionName;
     public State current_state;
     public AudioClip use;
+    public bool DirectlyInteractable = true;
     protected AudioSource sound;
     public enum State {
         Interacted,
@@ -22,7 +23,7 @@ public class Interactable : MonoBehaviour
     void OnTriggerEnter(Collider col) {
         col.TryGetComponent<Being>(out being);
 
-        if (being) {
+        if (being && DirectlyInteractable) {
             OnEnterTrigger();
         }
     }
@@ -32,7 +33,7 @@ public class Interactable : MonoBehaviour
         col.TryGetComponent<Being>(out being);
 
         if (being) {
-            if (being._input && being._input.use && IsNotAlreadyInteractedWith) {
+            if (being._input && being._input.use && IsNotAlreadyInteractedWith && DirectlyInteractable) {
                 if (sound) {
                     sound.PlayOneShot(use);
                 }

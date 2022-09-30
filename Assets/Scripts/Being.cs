@@ -23,6 +23,7 @@ public class Being : MonoBehaviour
     public PlayerInput _input;
     public bool isActive;
     public int health;
+    public bool enemy;
     public bool isAI;
     [Range(0, 20)]
     public float speed;
@@ -34,6 +35,7 @@ public class Being : MonoBehaviour
     [SerializeField] private List<Rig> _NPCRigs;
     [SerializeField] private GameObject ItemTree; 
     [SerializeField] private GameObject CameraTarget;
+    bool aggro;
     
     void Awake() {
         isActive = true;
@@ -55,6 +57,7 @@ public class Being : MonoBehaviour
         if (!_input) {
             _agent = GetComponent<NavMeshAgent>();
             _NPCIKWeights = GetComponent<HandleNPCIKWeights>();
+            SetTarget(null);
             ragdoll = GetComponent<HandleRagdoll>();
             ragdoll.DeactivateRagdoll();
         }
@@ -107,6 +110,9 @@ public class Being : MonoBehaviour
     public virtual void Damage(int value) {
         if (health - value > 0) {
             health -= value;
+            if (!aggro) {
+                aggro = true;
+            }
             if (BeingSound) {
                 int decision = UnityEngine.Random.Range(0, HitSounds.Count + 2);
                 if (decision < HitSounds.Count) {
@@ -208,12 +214,8 @@ public class Being : MonoBehaviour
         }
     }
 
-    public bool IsLockedOn() {
-        return _NPCIKWeights.LockOnActive;
-    }
-
-    public bool IsLockedOn(string tag) {
-        return _NPCIKWeights.target.tag == tag && IsLockedOn();
+    public bool IsLockedOnto(string tag) {
+        return _NPCIKWeights.target.tag == tag;
     }
 
     public bool HasInventory() {
@@ -224,8 +226,20 @@ public class Being : MonoBehaviour
         return false;
     }
 
+    public void EnableLockOn() {
+        _NPCIKWeights.EnableLook();
+    }
+
+    public void DisableLockOn() {
+        _NPCIKWeights.DisableLook();
+    }
+
     public Transform GetTarget() {
         return _NPCIKWeights.target;
+    }
+
+    public void SetTarget(Transform target) {
+        _NPCIKWeights.SetTarget(target);
     }
 
     void OnTriggerEnter(Collider col) {
@@ -281,5 +295,9 @@ public class Being : MonoBehaviour
         BeingSound.volume = UnityEngine.Random.Range(originalVolume - .075f, originalVolume + .075f);
         BeingSound.clip = sound;
         BeingSound.Play();
+    }
+
+    public bool IsAggro() {
+        return aggro;
     }
 }

@@ -12,8 +12,8 @@ public class Game : MonoBehaviour
     public List<Mission> missions;
     public GameUI ui;
     public Transform Player;
-    public Transform Enemies;
-    List<Transform> _Enemies = new List<Transform>();
+    public Transform Beings;
+    List<Transform> _Beings = new List<Transform>();
     Being being; 
     
 
@@ -37,7 +37,7 @@ public class Game : MonoBehaviour
         HandlePauseMenu(being._input.paused);
         HandleGameState();
         
-        SyncInternalEnemiesList();
+        SyncInternalBeingsList();
     }
 
     void HandlePauseMenu(bool active) {
@@ -101,11 +101,16 @@ public class Game : MonoBehaviour
         }
     }
 
-    void SyncInternalEnemiesList() {
-        if (Enemies.childCount != _Enemies.Count) {
-            foreach (Transform enemy in Enemies) {
-                if (!_Enemies.Contains(enemy)) {
-                    _Enemies.Add(enemy);
+    void SyncInternalBeingsList() {
+        if (Beings.childCount != _Beings.Count) {
+            foreach (Transform enemy in Beings) {
+                if (!_Beings.Contains(enemy)) {
+                    Logic enemy_logic;
+                    enemy.TryGetComponent<Logic>(out enemy_logic);
+                    if (enemy_logic) {
+                        enemy_logic.SetPlayerBeing(being);
+                    }
+                    _Beings.Add(enemy);
                 }
             }
         }

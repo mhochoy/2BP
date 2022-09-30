@@ -5,43 +5,35 @@ using UnityEngine.Animations.Rigging;
 
 public class HandleNPCIKWeights : MonoBehaviour
 {
-    public bool Activate = true;
-    bool deactivated;
-    [SerializeField] private Rig _BodyRig;
+    [SerializeField] private MultiAimConstraint HeadConstraint;
+    float originalHeadConstraintWeight;
     public Transform target;
-    public bool LockOnActive;
-    [SerializeField] private float _lookDistance;
 
-    void Update()
-    {
-        if (Activate) {
-            bool TargetIsWithinRange = Vector3.Distance(transform.position, target.position) < _lookDistance;
-            bool TargetIsNotWithinRange = Vector3.Distance(transform.position, target.position) > _lookDistance;
-            deactivated = false;
-            if (TargetIsWithinRange) {
-                if (_BodyRig) {
-                    _BodyRig.weight = .75f;
-                }
-                gameObject.transform.LookAt(Vector3.Slerp(transform.position, target.position, 2f), Vector3.up);
-                LockOnActive = true;
-            }
-            else if (TargetIsNotWithinRange) {
-                if (_BodyRig) {
-                    _BodyRig.weight = 0;
-                }
-                gameObject.transform.LookAt(null, Vector3.up);
-                LockOnActive = false;
-            }
-        }
-        else {
-            if (deactivated == false) {
-                deactivated = true;
-                gameObject.transform.LookAt(null);
-            }
+    void Start() {
+        if (HeadConstraint) {
+            originalHeadConstraintWeight = HeadConstraint.weight;
         }
     }
 
+    public void EnableLook() {
+        if (HeadConstraint) {
+            HeadConstraint.weight = originalHeadConstraintWeight;
+        }
+        gameObject.transform.LookAt(Vector3.Slerp(transform.position, target.position, 2f), Vector3.up);
+    }
+
+    public void DisableLook() {
+        if (HeadConstraint) {
+            HeadConstraint.weight = 0;
+        }
+        gameObject.transform.LookAt(null, Vector3.up);
+    }
+
     public void Deactivate() {
-        Activate = false;
+        target = null;
+    }
+
+    public void SetTarget(Transform _target) {
+        target = _target;
     }
 }   

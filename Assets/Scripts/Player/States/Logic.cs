@@ -12,12 +12,19 @@ public class Logic : MonoBehaviour
         Moving,
         Chasing,
     }
+    public bool Bloodthirsty; // Will keep looking for Player, even when Player is out of range
+    [Range(0,50)]
+    public int HearingRange;
     [Range(0,25)]
     public int ShootProbability;
+    WaypointManager waypoints;
     Transform target;
-    Being target_being;
+    Being player_being;
+    bool PlayerSpottedInRaycast = false;
+    int encounters = 0;
 
     void Start() {
+        TryGetComponent<WaypointManager>(out waypoints);
         current_state = State.Idle;
     }
 
@@ -27,24 +34,27 @@ public class Logic : MonoBehaviour
             return;
         }
 
-        if (being && being.IsLockedOn()) {
-            target = being.GetTarget();
-            target.TryGetComponent<Being>(out target_being);
-            if (target_being && !target_being.isActive) {
+        if (being) {
+            //target = being.GetTarget();
+            //target.TryGetComponent<Being>(out target_being);
+            if (player_being && !player_being.isActive) {
                 // Target is dead
-                current_state = State.Idle;
+                //current_state = State.Idle;
             }
         }
 
         switch (current_state) {
             case State.Idle:
-                being.Move(Vector3.zero);
+                // Do nothing
+                being.SetTarget(null);
                 break;
             case State.Moving:
-                being.Move(Vector3.forward);
+                being.Move(waypoints.CurrentWaypoint.position);
+                being.DisableLockOn();
                 break;
             case State.Chasing:
-                being.Move(target.position);
+                being.Move(player_being.transform.position);
+                
                 being.Swap(1);
                 if (being.HasAnItem()) {
                     int decision = UnityEngine.Random.Range(0, 25);
@@ -61,21 +71,55 @@ public class Logic : MonoBehaviour
 
     // Input
     void Update() {
-        bool CanSeePlayer = being.IsLockedOn("Player");
-        bool CantSeePlayerButCanSeeTarget = !being.IsLockedOn("Player") && being.IsLockedOn();
-        bool CantSeePlayerOrTarget = !being.IsLockedOn("Player") && !being.IsLockedOn();
+        if (!being.enabled || !being.isActive) {
+            being.SetTarget(null);
+            being.DisableLockOn();
+            current_state = State.Idle;
+            return;
+        }
 
+        bool NoticesPlayer = Vector3.Distance(player_being.transform.position, transform.position) < HearingRange;
+        bool CanSeePlayer = ((PlayerSpottedInRaycast && NoticesPlayer) || (encounters > 0 && Bloodthirsty) || being.IsAggro() && being.enemy) && player_being.isActive;
+        bool HasWaypoint = waypoints.CurrentWaypoint;
+        bool HasNoTargetOrWaypoint = !waypoints.CurrentWaypoint && !PlayerSpottedInRaycast || !player_being.isActive;
+
+        if (NoticesPlayer) {
+            being.SetTarget(player_being.transform);
+            being.EnableLockOn();
+            current_state = State.Idle;
+        }
+        else {
+            being.SetTarget(null);
+            being.DisableLockOn();
+            current_state = State.Moving;
+        }
+
+        RaycastHit hit;
+        if (Physics.Raycast(new Ray(transform.position+new Vector3(0,1f,0), transform.forward), out hit)) {
+            if (hit.transform.gameObject.layer == 7) {
+                encounters++;
+                PlayerSpottedInRaycast = true;
+            }
+            else {
+                PlayerSpottedInRaycast = false;
+            }
+        }
+        
         if (CanSeePlayer) {
             current_state = State.Chasing;
         }
-        else if (CantSeePlayerButCanSeeTarget) {
+        else if (HasWaypoint) {
             current_state = State.Moving;
         }
-        else if (CantSeePlayerOrTarget) {
+        else if (HasNoTargetOrWaypoint) {
             current_state = State.Idle;   
         }
         else {
             current_state = State.Idle;
         }
+    }
+
+    public void SetPlayerBeing(Being _being) {
+        player_being = _being;
     }
 }

@@ -11,6 +11,8 @@ public class Weapon : Item
     public int Range;
     public int Force;
     public int Bullets {get; private set;}
+    [Range(0,50)]
+    [SerializeField] private int AIHitChance;
     [SerializeField] private bool Infinity;
     [SerializeField] private float fire_rate;
     [SerializeField] private AudioClip _ReloadSound;
@@ -85,7 +87,7 @@ public class Weapon : Item
                 if (_FirePoint) {
                     float decision = UnityEngine.Random.Range(0, 15);
                     decision += (Vector3.Distance(hit.transform.position, _FirePoint.position) / 2) * 2;
-                    if (decision < 11f) {
+                    if (decision < AIHitChance) {
                         _being.Damage(Damage);
                         SpawnHitEffect(hit.point, hit.normal);
                     }

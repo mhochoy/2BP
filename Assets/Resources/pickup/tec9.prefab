@@ -858,11 +858,12 @@ MonoBehaviour:
   _UseSound: {fileID: 8300000, guid: eae10781de6507a43bc6aa6c79af8341, type: 3}
   _EffectPoint: {fileID: 5790232146868445479}
   ClickToUse: 0
-  Damage: 9
+  Damage: 15
   MaxBullets: 25
   Clips: 3
   Range: 40
   Force: 100
+  AIHitChance: 0
   Infinity: 0
   fire_rate: 0.09
   _ReloadSound: {fileID: 0}
