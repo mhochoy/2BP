@@ -65,7 +65,7 @@ public class ChatInteractable : Interactable
                 // do stuff here, show win screen, etc.
                 dialogueUI.StartDialogue(dialogue);
                 // just a simple time delay as an example
-                yield return new WaitForSeconds(2.5f);
+                yield return new WaitForSeconds(.5f);
                 completedDialogues.Add(dialogue);
                 // wait for player to press F
                 yield return waitForKeyPress(KeyCode. F); // wait for this function to return

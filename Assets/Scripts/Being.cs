@@ -24,18 +24,21 @@ public class Being : MonoBehaviour
     public bool isActive;
     public int health;
     public bool enemy;
+    public bool ItemBox;
     public bool isAI;
     [Range(0, 20)]
     public float speed;
     [Range(0, 20)]
     public float gravity;
     [SerializeField] private AudioSource BeingSound;
+    [SerializeField] private AudioClip HEALTH_AUDIO_CLIP;
     [SerializeField] private List<AudioClip> HitSounds;
     [SerializeField] private AudioClip DeathSound;
     [SerializeField] private List<Rig> _NPCRigs;
     [SerializeField] private GameObject ItemTree; 
     [SerializeField] private GameObject CameraTarget;
     bool aggro;
+    float originalSpeed;
     
     void Awake() {
         isActive = true;
@@ -56,6 +59,7 @@ public class Being : MonoBehaviour
         }
         if (!_input) {
             _agent = GetComponent<NavMeshAgent>();
+            originalSpeed = _agent.speed;
             _NPCIKWeights = GetComponent<HandleNPCIKWeights>();
             SetTarget(null);
             ragdoll = GetComponent<HandleRagdoll>();
@@ -107,6 +111,18 @@ public class Being : MonoBehaviour
         }
     }
 
+    public void GiveHealth(int value) {
+        if (BeingSound) {
+            BeingSound.PlayOneShot(HEALTH_AUDIO_CLIP);
+        }
+        if (health + value > 100) {
+            health = 100;
+        }
+        else {
+            health += value;
+        }
+    }
+
     public virtual void Damage(int value) {
         if (health - value > 0) {
             health -= value;
@@ -140,17 +156,21 @@ public class Being : MonoBehaviour
         if (ItemTree) {
             ItemTree.SetActive(false);
         }
+        if (inventory && inventory.HasDroppableItem()) {
+            inventory.DropItem();
+        }
         if (isAI) {
             if (_NPCRigs.Count > 0) {
                 foreach (Rig rig in _NPCRigs) {
                     rig.weight = 0;
                 }
             }
-            if (inventory) {
-                inventory.DropItem();
+            if (_NPCIKWeights) {
+                _NPCIKWeights.Deactivate();
             }
-            _NPCIKWeights.Deactivate();
-            _agent.enabled = false;
+            if (_agent) {
+                _agent.enabled = false;
+            }
         }
         else if (!isAI) {
             if (CameraTarget) {
@@ -159,9 +179,16 @@ public class Being : MonoBehaviour
             _controller.enabled = false;
         }
         
-        ragdoll.ActivateRagdoll();
-        animator.enabled = false;
+        if (ragdoll) {
+            ragdoll.ActivateRagdoll();
+        }
+        if (animator) {
+            animator.enabled = false;
+        }
         isActive = false;
+        if (ItemBox) {
+            gameObject.SetActive(false);
+        }
         enabled = false;
     }
 
@@ -173,7 +200,7 @@ public class Being : MonoBehaviour
         if (y != 0) {
             animator.SetFloat("y", y);
         }
-        direction = transform.forward * y + transform.right * x;
+        direction = transform.forward * y + transform.right * (x/2);
         direction.y -= gravity;
         _controller.Move(direction * speed * Time.deltaTime);
     }
@@ -247,8 +274,21 @@ public class Being : MonoBehaviour
         col.gameObject.TryGetComponent<ItemPickup>(out pickup);
 
         if (pickup != null && !isAI) {
-            pickup.PickedUp();
-            inventory.GiveItem(pickup.item);
+            switch (pickup.ItemType) {
+                case ItemPickup.PickupType.Health:
+                    if (health < 100) {
+                        pickup.PickedUp();
+                        GiveHealth(pickup.value);
+                    }
+                    break;
+                case ItemPickup.PickupType.Weapon:
+                    pickup.PickedUp();
+                    inventory.GiveItem(pickup.item);
+                    break;
+                default:
+                    pickup.PickedUp();
+                    break;
+            }
         }
     }
 
@@ -299,5 +339,9 @@ public class Being : MonoBehaviour
 
     public bool IsAggro() {
         return aggro;
+    }
+
+    public void SetAggro(bool state) {
+        aggro = state;
     }
 }

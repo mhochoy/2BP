@@ -54,7 +54,6 @@ public class Logic : MonoBehaviour
                 break;
             case State.Chasing:
                 being.Move(player_being.transform.position);
-                
                 being.Swap(1);
                 if (being.HasAnItem()) {
                     int decision = UnityEngine.Random.Range(0, 25);

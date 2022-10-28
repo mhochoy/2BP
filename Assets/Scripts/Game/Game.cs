@@ -23,6 +23,11 @@ public class Game : MonoBehaviour
 
     void Update()
     {
+        foreach (Mission mission in missions) {
+            if (mission.current_state == Mission.State.Complete) {
+                missions.Remove(mission);
+            }
+        }
         if (ui.IsGameOverMenuActive()) {
             ui.HideHUD();
             ui.DisablePauseMenu();
@@ -31,6 +36,8 @@ public class Game : MonoBehaviour
         if (current_state == State.Complete) {
             Debug.Log("Level Complete!");
             // Load in next level or cutscene
+        }
+        else {
         }
         HandleUI();
         HandleGameOverState();
@@ -58,6 +65,13 @@ public class Game : MonoBehaviour
         if (being) {
             Interactable interactable = being.GetNearestInteraction();
 
+            if (missions.Count > 0) {
+                ui.InProgressObjectiveText();
+                ui.SetObjectiveText(missions[0].description);
+            }
+            else {
+                ui.CompletedObjectiveText();
+            }
             ui.SetHealth(being.health);
             ui.SetAmmoText(being.GetItemStats());
             HandleInteractableUI(interactable);
@@ -103,14 +117,15 @@ public class Game : MonoBehaviour
 
     void SyncInternalBeingsList() {
         if (Beings.childCount != _Beings.Count) {
-            foreach (Transform enemy in Beings) {
-                if (!_Beings.Contains(enemy)) {
-                    Logic enemy_logic;
-                    enemy.TryGetComponent<Logic>(out enemy_logic);
-                    if (enemy_logic) {
-                        enemy_logic.SetPlayerBeing(being);
+            foreach (Transform _being in Beings) {
+                if (!_Beings.Contains(_being)) {
+                    Logic being_logic;
+                    _being.TryGetComponent<Logic>(out being_logic);
+                    
+                    if (being_logic) {
+                        being_logic.SetPlayerBeing(being);
                     }
-                    _Beings.Add(enemy);
+                    _Beings.Add(_being);
                 }
             }
         }

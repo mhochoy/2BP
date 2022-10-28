@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 203535137486604868}
   - component: {fileID: 203535137486604869}
   - component: {fileID: 183645939}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: pistol_glock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,7 +227,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 203535137873743225}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 203535137881642311}
   - component: {fileID: 203535137881642309}
   - component: {fileID: 203535137881642310}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SuddenMuzzleFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5071,7 +5071,7 @@ GameObject:
   - component: {fileID: 203535138716394578}
   - component: {fileID: 203535138716394579}
   - component: {fileID: 1540378657}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PistolMuzzleFire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9934,7 +9934,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 203535138839629647}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9968,7 +9968,7 @@ GameObject:
   - component: {fileID: 203535138995697361}
   - component: {fileID: 203535138995697367}
   - component: {fileID: 203535138995697360}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10051,7 +10051,7 @@ GameObject:
   - component: {fileID: 203535139053422257}
   - component: {fileID: 203535139053422263}
   - component: {fileID: 203535139053422256}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: glock2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10137,7 +10137,7 @@ GameObject:
   - component: {fileID: 203535138770886988}
   - component: {fileID: 203535138770886994}
   - component: {fileID: 203535138770886995}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: glock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10198,7 +10198,7 @@ GameObject:
   - component: {fileID: 203535139246609064}
   - component: {fileID: 203535139246609070}
   - component: {fileID: 203535139246609071}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SniperSmoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}

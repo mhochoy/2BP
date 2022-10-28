@@ -11,7 +11,7 @@ public class Weapon : Item
     public int Range;
     public int Force;
     public int Bullets {get; private set;}
-    [Range(0,50)]
+    [Range(0,100)]
     [SerializeField] private int AIHitChance;
     [SerializeField] private bool Infinity;
     [SerializeField] private float fire_rate;
@@ -23,6 +23,8 @@ public class Weapon : Item
     GameObject _hit_effect;
     ParticleSystem _hit_particle;
     float last_fired;
+    float _DistanceFromPlayer;
+    Vector3 LastRaycastHit;
 
     public override void Awake()
     {
@@ -34,6 +36,10 @@ public class Weapon : Item
             _hit_particle = _hit_effect.GetComponent<ParticleSystem>();
         }
         Bullets = MaxBullets;
+    }
+
+    void Update() {
+        _DistanceFromPlayer = UnityEngine.Random.Range(0, Vector3.Distance(transform.position, LastRaycastHit));
     }
 
     public override void Use()
@@ -83,29 +89,39 @@ public class Weapon : Item
             if (hit.rigidbody) {
                 hit.rigidbody.AddForceAtPosition(-hit.transform.forward * Force, hit.point, ForceMode.Impulse);
             }
-            if (_being && _being.isActive) {
-                if (_FirePoint) {
-                    float decision = UnityEngine.Random.Range(0, 15);
-                    decision += (Vector3.Distance(hit.transform.position, _FirePoint.position) / 2) * 2;
-                    if (decision < AIHitChance) {
+            if (_FirePoint) {
+                // AI Shooting
+                float decision = _DistanceFromPlayer / 2;
+                Debug.Log($"Distance: {_DistanceFromPlayer}, Decision: {decision}");
+                if (decision <= AIHitChance) {
+                    if (_HitSound) {
+                        Invoke("PlayHitSound", .075f);
+                    }
+                    if (_being) {
                         _being.Damage(Damage);
                         SpawnHitEffect(hit.point, hit.normal);
                     }
                 }
-                else {
-                    _being.Damage(Damage);
-                    SpawnHitEffect(hit.point, hit.normal);
+                return;
+            }
+            else {
+                // Player shooting
+                if (_HitSound) {
+                    Invoke("PlayHitSound", .075f);
                 }
+                SpawnHitEffect(hit.point, hit.normal);
+            }
 
-                Debug.Log(hit.transform.name);
+            if (_being && _being.isActive) {
+                if (_HitSound) {
+                    Invoke("PlayHitSound", .075f);
+                }
+                _being.Damage(Damage);
             }
         }
     }
 
     void SpawnHitEffect(Vector3 point, Vector3 normal) {
-        if (_HitSound) {
-            Invoke("PlayHitSound", .075f);
-        }
         if (_HitEffect) {
             _hit_effect.transform.position = point;
             _hit_effect.transform.rotation = Quaternion.FromToRotation(Vector3.up, normal);

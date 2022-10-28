@@ -127,6 +127,10 @@ public class Inventory : MonoBehaviour
         return (current_item && current_item.item_name != "none");
     }
 
+    public bool HasDroppableItem() {
+        return _DroppableItem ? true : false;
+    }
+
     public void DropItem() {
         if (UnityEngine.Random.Range(0f, 1f) >= .3f && _DroppableItem) {
             Instantiate(_DroppableItem, transform.position+new Vector3(0f,1.5f,0f), transform.rotation);

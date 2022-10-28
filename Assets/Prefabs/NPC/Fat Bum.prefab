@@ -2768,6 +2768,7 @@ MonoBehaviour:
   interactionName: Fat Bum
   current_state: 1
   use: {fileID: 0}
+  DirectlyInteractable: 1
   npc: {fileID: 6220250335761858196}
   DialogueBox: {fileID: 0}
   dialogues:
@@ -2919,6 +2920,7 @@ GameObject:
   - component: {fileID: 6220250335761858184}
   - component: {fileID: 6220250335761858185}
   - component: {fileID: 520254890175810934}
+  - component: {fileID: 543450653438642258}
   m_Layer: 8
   m_Name: Fat Bum
   m_TagString: Untagged
@@ -2933,7 +2935,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6526750951177145783}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.3255277, y: -2.2571912, z: 4.374875}
   m_LocalScale: {x: 0.47649857, y: 0.47649857, z: 0.47649857}
   m_ConstrainProportionsScale: 0
@@ -2985,6 +2987,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   being: {fileID: 6220250335761858196}
   current_state: 0
+  Bloodthirsty: 0
+  HearingRange: 3
   ShootProbability: 0
 --- !u!114 &6220250335761858196
 MonoBehaviour:
@@ -3000,7 +3004,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _input: {fileID: 0}
   isActive: 1
-  health: 250
+  health: 40
+  enemy: 0
   isAI: 0
   speed: 0
   gravity: 0
@@ -3037,11 +3042,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8916adbf65e33c2429078c3c370ddba3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Activate: 1
-  _BodyRig: {fileID: 6220250335222289562}
+  HeadConstraint: {fileID: 0}
   target: {fileID: 0}
-  LockOnActive: 0
-  _lookDistance: 7
 --- !u!195 &6220250335761858187
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3151,6 +3153,21 @@ MonoBehaviour:
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: 0, y: -0.1, z: 0}
+--- !u!114 &543450653438642258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6526750951177145783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 496dedda9d33c28418055b979f7ff958, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentWaypoint: {fileID: 0}
+  GeneralWaypoints: []
+  PersonalWaypoints: []
 --- !u!1 &6578969221643393503
 GameObject:
   m_ObjectHideFlags: 0
