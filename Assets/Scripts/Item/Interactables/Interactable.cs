@@ -14,6 +14,7 @@ public class Interactable : MonoBehaviour
         Uninteracted
     }
     Being being;
+    bool blocked;
 
     void Start() {
         TryGetComponent<AudioSource>(out sound);
@@ -22,8 +23,10 @@ public class Interactable : MonoBehaviour
     // Input
     void OnTriggerEnter(Collider col) {
         col.TryGetComponent<Being>(out being);
+        //Clear previous nearest interaction
+        OnLeaveTrigger();
 
-        if (being && DirectlyInteractable) {
+        if (being && DirectlyInteractable && !blocked) {
             OnEnterTrigger();
         }
     }
@@ -32,7 +35,7 @@ public class Interactable : MonoBehaviour
         bool IsNotAlreadyInteractedWith = (current_state != State.Interacted);
         col.TryGetComponent<Being>(out being);
 
-        if (being) {
+        if (being && !blocked) {
             if (being._input && being._input.use && IsNotAlreadyInteractedWith && DirectlyInteractable) {
                 if (sound) {
                     sound.PlayOneShot(use);
@@ -95,6 +98,15 @@ public class Interactable : MonoBehaviour
 
     protected virtual void Check() {
         // Update
+        if (being) {
+            if (!Physics.Linecast(transform.position, being.transform.position)) {
+                blocked = false;
+                
+            }
+            else {
+                blocked = true;
+            }
+        }
     }
 
     protected virtual void GivePlayer(Item item) {

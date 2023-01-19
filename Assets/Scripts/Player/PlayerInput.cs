@@ -12,6 +12,7 @@ public class PlayerInput : MonoBehaviour
     public bool shoot_held;
     public bool reload;
     bool esc;
+    bool locked = false;
     public bool paused = false;
     public bool use;
     bool switch_pressed_up;
@@ -23,7 +24,9 @@ public class PlayerInput : MonoBehaviour
         if (esc) {
             paused = !paused;
         }
-        if (paused) {
+        if (paused || locked) {
+            x = 0;
+            z = 0;
             return;
         }
         x = Input.GetAxis("Horizontal");
@@ -44,5 +47,13 @@ public class PlayerInput : MonoBehaviour
         else {
             switch_pressed = 0;
         }
+    }
+
+    public bool AreKeysLocked() {
+        return locked;
+    }
+
+    public void LockKeys() {
+        locked = !locked;
     }
 }

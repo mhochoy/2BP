@@ -9,6 +9,7 @@ using Cinemachine;
 public class Being : MonoBehaviour
 {
     Animator animator;
+    AnimatorOverrideController animatorOverrideController;
     NavMeshAgent _agent;
     HandleRagdoll ragdoll;
     HandleNPCIKWeights _NPCIKWeights;
@@ -19,7 +20,7 @@ public class Being : MonoBehaviour
     CinemachineImpulseSource impulse;
     float originalPitch;
     float originalVolume;
-    int points;
+    public int points;
     public PlayerInput _input;
     public bool isActive;
     public int health;
@@ -31,6 +32,7 @@ public class Being : MonoBehaviour
     [Range(0, 20)]
     public float gravity;
     [SerializeField] private AudioSource BeingSound;
+    [SerializeField] AnimationClip IdleAnimation;
     [SerializeField] private AudioClip HEALTH_AUDIO_CLIP;
     [SerializeField] private List<AudioClip> HitSounds;
     [SerializeField] private AudioClip DeathSound;
@@ -59,11 +61,18 @@ public class Being : MonoBehaviour
         }
         if (!_input) {
             _agent = GetComponent<NavMeshAgent>();
-            originalSpeed = _agent.speed;
             _NPCIKWeights = GetComponent<HandleNPCIKWeights>();
-            SetTarget(null);
             ragdoll = GetComponent<HandleRagdoll>();
-            ragdoll.DeactivateRagdoll();
+
+            if (_agent) {
+                originalSpeed = _agent.speed;
+            }
+            if (_NPCIKWeights) {
+                SetTarget(null);
+            }
+            if (ragdoll) {
+                ragdoll.DeactivateRagdoll();
+            }
         }
         else {
             return;
@@ -108,6 +117,9 @@ public class Being : MonoBehaviour
             }
             
             Reload(_input.reload);
+        }
+        else {
+            
         }
     }
 
@@ -205,9 +217,10 @@ public class Being : MonoBehaviour
         _controller.Move(direction * speed * Time.deltaTime);
     }
 
-    public virtual void Move(Vector3 direction) {
+    public virtual void Move(Vector3 direction, bool walk = false) {
         // Movement in the case of AI. Quick and Dirty
         Vector3 _position = transform.position;
+
         animator.SetFloat("x", _agent.velocity.x);
         animator.SetFloat("y", _agent.velocity.z);
         _position.y -= gravity;
@@ -290,6 +303,10 @@ public class Being : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public bool HasIdleAnimation() {
+        return IdleAnimation;
     }
 
     public bool HasAnItem() {

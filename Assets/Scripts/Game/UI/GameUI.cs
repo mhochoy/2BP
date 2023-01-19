@@ -5,9 +5,13 @@ using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
-    public GameObject HUD;
     public GameObject Menu;
     public GameObject GameOver;
+    public GameObject MissionCompleted;
+    public TMPro.TMP_Text MissionMoney;
+    public TMPro.TMP_Text MissionBodies;
+    public TMPro.TMP_Text MissionObjectivesDone;
+    public GameObject HUD;
     public TMPro.TMP_Text ObjectiveText;
     public TMPro.TMP_Text InteractableText;
     public TMPro.TMP_Text AmmoText;
@@ -46,6 +50,18 @@ public class GameUI : MonoBehaviour
         MoneyText.text = text;
     }
 
+    public void SetMissionMoneyText(string text) {
+        MissionMoney.text = text;
+    }
+
+    public void SetMissionBodiesText(string text) {
+        MissionBodies.text = text;
+    }
+
+    public void SetMissionsDoneText(string text) {
+        MissionObjectivesDone.text = text;
+    }
+
     public void ShowHUD() {
         HUD.SetActive(true);
     }
@@ -57,19 +73,35 @@ public class GameUI : MonoBehaviour
     public void EnablePauseMenu() {
         Time.timeScale = 0f;
         Menu.SetActive(true);
+        FreeCursor();
     }
 
     public void DisablePauseMenu() {
         Time.timeScale = 1;
         Menu.SetActive(false);
+        LockCursor();
     }
 
     public void EnableGameOverMenu() {
         GameOver.SetActive(true);
+        FreeCursor();
     }
 
     public void DisableGameOverMenu() {
         GameOver.SetActive(false);
+        LockCursor();
+    }
+
+    public void EnableMissionCompleteMenu() {
+        Time.timeScale = .1f;
+        MissionCompleted.SetActive(true);
+        FreeCursor();
+    }
+
+    public void DisableMissionCompleteMenu() {
+        Time.timeScale = 1f;
+        MissionCompleted.SetActive(false);
+        LockCursor();
     }
 
     public bool IsGameOverMenuActive() {
@@ -78,5 +110,15 @@ public class GameUI : MonoBehaviour
 
     public bool IsPauseMenuActive() {
         return Menu.activeInHierarchy;
+    }
+
+    void FreeCursor() {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    void LockCursor() {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 }

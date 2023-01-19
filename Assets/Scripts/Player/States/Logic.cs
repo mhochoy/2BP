@@ -49,13 +49,15 @@ public class Logic : MonoBehaviour
                 being.SetTarget(null);
                 break;
             case State.Moving:
-                being.Move(waypoints.CurrentWaypoint.position);
+                being.Move(waypoints.GetCurrentPoint(), walk: true);
+                waypoints.WaypointModeStoppingDistance();
                 being.DisableLockOn();
                 break;
             case State.Chasing:
                 being.Move(player_being.transform.position);
+                waypoints.ChasingModeStoppingDistance();
                 being.Swap(1);
-                if (being.HasAnItem()) {
+                if (being.HasAnItem() && PlayerSpottedInRaycast) {
                     int decision = UnityEngine.Random.Range(0, 25);
                     if (decision <= ShootProbability) {
                         being.Use(true);
@@ -79,8 +81,8 @@ public class Logic : MonoBehaviour
 
         bool NoticesPlayer = Vector3.Distance(player_being.transform.position, transform.position) < HearingRange;
         bool CanSeePlayer = ((PlayerSpottedInRaycast && NoticesPlayer) || (encounters > 0 && Bloodthirsty) || being.IsAggro() && being.enemy) && player_being.isActive;
-        bool HasWaypoint = waypoints.CurrentWaypoint;
-        bool HasNoTargetOrWaypoint = !waypoints.CurrentWaypoint && !PlayerSpottedInRaycast || !player_being.isActive;
+        bool HasWaypoint = waypoints.PersonalCount() > 0;
+        bool HasNoTargetOrWaypoint = waypoints.PersonalCount() <= 0 && !PlayerSpottedInRaycast || !player_being.isActive;
 
         if (NoticesPlayer) {
             being.SetTarget(player_being.transform);

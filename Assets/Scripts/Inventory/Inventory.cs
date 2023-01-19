@@ -32,12 +32,17 @@ public class Inventory : MonoBehaviour
         }
 
         // Set the current Item
-        Item selected_item = items[internal_item_index];
-        if (selected_item) {
-            selected_item.gameObject.SetActive(true);
-            current_item = selected_item;
+        if (items.Count > 0) {
+            Item selected_item = items[internal_item_index];
+            if (selected_item) {
+                selected_item.gameObject.SetActive(true);
+                current_item = selected_item;
+            }
         }
-
+        else {
+            return;
+        }
+        
         // Sync Animator to inventory
         if (current_item) {
             SetSelectedItem(current_item.item_name);
@@ -133,7 +138,14 @@ public class Inventory : MonoBehaviour
 
     public void DropItem() {
         if (UnityEngine.Random.Range(0f, 1f) >= .3f && _DroppableItem) {
-            Instantiate(_DroppableItem, transform.position+new Vector3(0f,1.5f,0f), transform.rotation);
+            GameObject droppable = Instantiate(_DroppableItem, transform.position, transform.rotation);
+            RaycastHit droppable_raycast_hit;
+
+            if (Physics.Raycast(droppable.transform.position, Vector3.down, out droppable_raycast_hit, .5f)) {
+                if (droppable_raycast_hit.transform.gameObject.layer == 6) {
+                    droppable.transform.position += new Vector3(0f, 1f, 0f);
+                }
+            }
         }
     }
 }

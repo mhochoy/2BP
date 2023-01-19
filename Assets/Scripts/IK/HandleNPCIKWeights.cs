@@ -8,6 +8,7 @@ public class HandleNPCIKWeights : MonoBehaviour
     [SerializeField] private MultiAimConstraint HeadConstraint;
     float originalHeadConstraintWeight;
     public Transform target;
+    bool PlayerSpottedInRaycast;
 
     void Start() {
         if (HeadConstraint) {
