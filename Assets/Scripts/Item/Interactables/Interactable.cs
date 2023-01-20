@@ -35,7 +35,7 @@ public class Interactable : MonoBehaviour
         bool IsNotAlreadyInteractedWith = (current_state != State.Interacted);
         col.TryGetComponent<Being>(out being);
 
-        if (being && !blocked) {
+        if (being && !blocked && being.GetNearestInteraction() == this) {
             if (being._input && being._input.use && IsNotAlreadyInteractedWith && DirectlyInteractable) {
                 if (sound) {
                     sound.PlayOneShot(use);
