@@ -16,7 +16,7 @@ public class Being : MonoBehaviour
     Vector3 direction;
     CharacterController _controller;
     Inventory inventory;
-    Interactable nearestInteractable;
+    [SerializeField] Interactable nearestInteractable;
     CinemachineImpulseSource impulse;
     float originalPitch;
     float originalVolume;

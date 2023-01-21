@@ -72,17 +72,22 @@ public class Logic : MonoBehaviour
 
     // Input
     void Update() {
+        bool NoticesPlayer = false;
+        bool CanSeePlayer = false;
+        bool HasWaypoint = waypoints.PersonalCount() > 0;
+        bool HasNoTargetOrWaypoint = false;
+        if (player_being) {
+            NoticesPlayer = Vector3.Distance(player_being.transform.position, transform.position) < HearingRange;
+            CanSeePlayer = ((PlayerSpottedInRaycast && NoticesPlayer) || (encounters > 0 && Bloodthirsty) || being.IsAggro() && being.enemy) && player_being.isActive;
+            HasNoTargetOrWaypoint = waypoints.PersonalCount() <= 0 && !PlayerSpottedInRaycast || !player_being.isActive;
+        }
+
         if (!being.enabled || !being.isActive) {
             being.SetTarget(null);
             being.DisableLockOn();
             current_state = State.Idle;
             return;
         }
-
-        bool NoticesPlayer = Vector3.Distance(player_being.transform.position, transform.position) < HearingRange;
-        bool CanSeePlayer = ((PlayerSpottedInRaycast && NoticesPlayer) || (encounters > 0 && Bloodthirsty) || being.IsAggro() && being.enemy) && player_being.isActive;
-        bool HasWaypoint = waypoints.PersonalCount() > 0;
-        bool HasNoTargetOrWaypoint = waypoints.PersonalCount() <= 0 && !PlayerSpottedInRaycast || !player_being.isActive;
 
         if (NoticesPlayer) {
             being.SetTarget(player_being.transform);

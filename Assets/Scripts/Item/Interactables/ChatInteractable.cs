@@ -25,6 +25,11 @@ public class ChatInteractable : Interactable
         }
     }
 
+    protected override void OnTriggerStay(Collider col)
+    {
+        base.OnTriggerStay(col);
+    }
+
     protected override void Activate()
     {
         base.Activate();

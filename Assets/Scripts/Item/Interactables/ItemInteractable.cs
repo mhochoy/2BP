@@ -11,17 +11,36 @@ public class ItemInteractable : Interactable
     void Start() {
         sound = GetComponent<AudioSource>();
     }
-    protected override void Activate()
+
+    protected override void OnTriggerEnter(Collider col)
     {
-        base.Activate();
-        Being being = base.GetBeing();
-        
+        base.OnTriggerEnter(col);
+    }
+
+    protected override void OnTriggerStay(Collider col)
+    {
+        base.OnTriggerStay(col);
+    }
+
+    protected override void OnTrigger()
+    {
+        Being _being = null;
+        base.OnTrigger();
+        if (!base.being) {
+            _being = base.GetBeing();
+        }
         if (item) {
             GivePlayer(item);
-            if (value > 0) {
-                being.AddScore(value);
-            }
         }
+        if (value > 0 && base.being) {
+            base.being.AddScore(value);
+        }
+    }
+
+    protected override void Activate()
+    {
+        
+        base.Activate();
         Interactable.SetActive(false);
         Invoke("DisableMainObject", 3f);
     }

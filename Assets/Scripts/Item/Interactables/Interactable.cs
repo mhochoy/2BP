@@ -13,7 +13,7 @@ public class Interactable : MonoBehaviour
         Interacted,
         Uninteracted
     }
-    Being being;
+    protected Being being;
     bool blocked;
 
     void Start() {
@@ -21,29 +21,34 @@ public class Interactable : MonoBehaviour
     }
 
     // Input
-    void OnTriggerEnter(Collider col) {
+    protected virtual void OnTriggerEnter(Collider col) {
         col.TryGetComponent<Being>(out being);
-        //Clear previous nearest interaction
-        OnLeaveTrigger();
 
-        if (being && DirectlyInteractable && !blocked) {
+        if (being && DirectlyInteractable) {
             OnEnterTrigger();
         }
     }
 
-    void OnTriggerStay(Collider col) {
-        bool IsNotAlreadyInteractedWith = (current_state != State.Interacted);
+    protected virtual void OnTriggerStay(Collider col) {
         col.TryGetComponent<Being>(out being);
+        bool IsNotAlreadyInteractedWith = (current_state != State.Interacted);
+        bool ThisIsTheNearestInteractable = (being && being.GetNearestInteraction() == this);
+        bool BeingIsInteractingWithInteractable = (being && being._input && being._input.use);
 
-        if (being && !blocked && being.GetNearestInteraction() == this) {
-            if (being._input && being._input.use && IsNotAlreadyInteractedWith && DirectlyInteractable) {
+        if (being && ThisIsTheNearestInteractable) {
+            being.SetNearestInteraction(this);
+            if (BeingIsInteractingWithInteractable && IsNotAlreadyInteractedWith && DirectlyInteractable) {
                 if (sound) {
                     sound.PlayOneShot(use);
                 }
-                being.SetNearestInteraction(this);
+                OnTrigger();
                 current_state = State.Interacted;
             }
         }
+    }
+
+    protected virtual void OnTrigger() {
+        
     }
 
     void OnTriggerExit(Collider col) {
@@ -93,7 +98,9 @@ public class Interactable : MonoBehaviour
     }
 
     protected virtual void OnLeaveTrigger() {
-        being.SetNearestInteraction(null);
+        if (being) {
+            being.SetNearestInteraction(null);
+        }
     }
 
     protected virtual void Check() {

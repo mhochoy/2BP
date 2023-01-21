@@ -24,4 +24,6 @@ public class ChainInteractables : MonoBehaviour
             done = true;
         }
     }
+
+    
 }
