@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cadef82e81045f4e906a6d14db45489, type: 3}
   m_Name: Dialogue 1
   m_EditorClassIdentifier: 
-  finalText: Last I saw there was only a few guys in there... With a  buncha cash,
-    too!! ... One of them looked like they meant business though, so be careful...
+  finalText: Last I saw there was only a few guys in there... With a bunch of cash
+    too... Must be around ten thousand. One of them looked like they meant business
+    though, so be careful...

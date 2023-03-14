@@ -21,7 +21,11 @@ public class Logic : MonoBehaviour
     Transform target;
     Being player_being;
     bool PlayerSpottedInRaycast = false;
+    bool Blocked = false;
     int encounters = 0;
+
+    [SerializeField] bool _NoticesPlayer;
+    [SerializeField] bool _CanSeePlayer;
 
     void Start() {
         TryGetComponent<WaypointManager>(out waypoints);
@@ -77,10 +81,13 @@ public class Logic : MonoBehaviour
         bool HasWaypoint = waypoints.PersonalCount() > 0;
         bool HasNoTargetOrWaypoint = false;
         if (player_being) {
-            NoticesPlayer = Vector3.Distance(player_being.transform.position, transform.position) < HearingRange;
+            NoticesPlayer = Vector3.Distance(player_being.transform.position, transform.position) < HearingRange && !Blocked;
             CanSeePlayer = ((PlayerSpottedInRaycast && NoticesPlayer) || (encounters > 0 && Bloodthirsty) || being.IsAggro() && being.enemy) && player_being.isActive;
             HasNoTargetOrWaypoint = waypoints.PersonalCount() <= 0 && !PlayerSpottedInRaycast || !player_being.isActive;
         }
+
+        _NoticesPlayer = NoticesPlayer;
+        _CanSeePlayer = CanSeePlayer;
 
         if (!being.enabled || !being.isActive) {
             being.SetTarget(null);
@@ -101,6 +108,8 @@ public class Logic : MonoBehaviour
         }
 
         RaycastHit hit;
+        RaycastHit door_hit;
+
         if (Physics.Raycast(new Ray(transform.position+new Vector3(0,1f,0), transform.forward), out hit)) {
             if (hit.transform.gameObject.layer == 7) {
                 encounters++;
@@ -108,6 +117,13 @@ public class Logic : MonoBehaviour
             }
             else {
                 PlayerSpottedInRaycast = false;
+            }
+        }
+
+        if (Physics.Raycast(new Ray(transform.position, transform.forward), out door_hit, 5f)) {
+            if (door_hit.transform.CompareTag("door")) {
+                current_state = State.Idle;
+                return;
             }
         }
         

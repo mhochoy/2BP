@@ -59,12 +59,17 @@ MonoBehaviour:
   Clips: 2
   Range: 25
   Force: 40
+  AIHitChance: 0
+  Infinity: 0
   fire_rate: 0.07
+  _AggroTrigger: {fileID: 2494151360357380883, guid: 883e38295019acd4bafe03f639500764, type: 3}
   _ReloadSound: {fileID: 8300000, guid: 7207cb1685f8a934ab53bec618f50f08, type: 3}
   _HitEffect: {fileID: 100012, guid: b69189a730299704681c21e6ffff2451, type: 3}
   _PlayerLayer:
     serializedVersion: 2
     m_Bits: 128
+  _HitSound: {fileID: 0}
+  _FirePoint: {fileID: 0}
 --- !u!82 &851928953618699037
 AudioSource:
   m_ObjectHideFlags: 0

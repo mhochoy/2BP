@@ -31,6 +31,8 @@ public class Being : MonoBehaviour
     public float speed;
     [Range(0, 20)]
     public float gravity;
+    [SerializeField] private Transform Head;
+    [SerializeField] private GameObject AggroTrigger;
     [SerializeField] private AudioSource BeingSound;
     [SerializeField] AnimationClip IdleAnimation;
     [SerializeField] private AudioClip HEALTH_AUDIO_CLIP;
@@ -101,6 +103,7 @@ public class Being : MonoBehaviour
         if (!isAI) {
             var item = inventory.current_item;
             bool _HasAnItemThatIsntTheDefaultOne = inventory.HasAnItem();
+            
             
             if (_HasAnItemThatIsntTheDefaultOne) {
                 // Handle Use
@@ -229,8 +232,16 @@ public class Being : MonoBehaviour
     }
 
     public virtual void Use(bool is_using) {
+        bool _HasAnItemAndItIsAWeapon = (inventory.current_item && inventory.current_item is Weapon);
+
         if (is_using) {
             inventory.current_item.Use();
+            if (_HasAnItemAndItIsAWeapon && !isAI) {
+                GameObject aggrotrig = Instantiate(AggroTrigger, transform.position, transform.rotation);
+                SphereCollider spherecol = aggrotrig.GetComponent<SphereCollider>();
+
+                spherecol.enabled = true;
+            }
         }
     }
 
@@ -286,6 +297,11 @@ public class Being : MonoBehaviour
         ItemPickup pickup;
         col.gameObject.TryGetComponent<ItemPickup>(out pickup);
 
+        // Layer 2 is AggroTriggers
+        if (gameObject.layer == 2) {
+            return;
+        }
+
         if (pickup != null && !isAI) {
             switch (pickup.ItemType) {
                 case ItemPickup.PickupType.Health:
@@ -303,6 +319,10 @@ public class Being : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public Transform GetHeadTransform() {
+        return Head;
     }
 
     public bool HasIdleAnimation() {
