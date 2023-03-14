@@ -15,7 +15,6 @@ public class Weapon : Item
     [SerializeField] private int AIHitChance;
     [SerializeField] private bool Infinity;
     [SerializeField] private float fire_rate;
-    [SerializeField] private GameObject _AggroTrigger;
     [SerializeField] private AudioClip _ReloadSound;
     [SerializeField] private GameObject _HitEffect;
     [SerializeField] private LayerMask _PlayerLayer;
@@ -128,10 +127,6 @@ public class Weapon : Item
             _hit_effect.transform.rotation = Quaternion.FromToRotation(Vector3.up, normal);
             _hit_particle.Play();
         }
-    }
-
-    void PlayHitSound() {
-        PlayEditedItemSound(_HitSound);
     }
 
     public void GiveAmmo(int amount) {

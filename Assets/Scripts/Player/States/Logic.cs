@@ -18,7 +18,6 @@ public class Logic : MonoBehaviour
     [Range(0,25)]
     public int ShootProbability;
     WaypointManager waypoints;
-    Transform target;
     Being player_being;
     bool PlayerSpottedInRaycast = false;
     bool Blocked = false;

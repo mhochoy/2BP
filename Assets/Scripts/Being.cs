@@ -9,7 +9,6 @@ using Cinemachine;
 public class Being : MonoBehaviour
 {
     Animator animator;
-    AnimatorOverrideController animatorOverrideController;
     NavMeshAgent _agent;
     HandleRagdoll ragdoll;
     HandleNPCIKWeights _NPCIKWeights;
@@ -31,10 +30,8 @@ public class Being : MonoBehaviour
     public float speed;
     [Range(0, 20)]
     public float gravity;
-    [SerializeField] private Transform Head;
     [SerializeField] private GameObject AggroTrigger;
     [SerializeField] private AudioSource BeingSound;
-    [SerializeField] AnimationClip IdleAnimation;
     [SerializeField] private AudioClip HEALTH_AUDIO_CLIP;
     [SerializeField] private List<AudioClip> HitSounds;
     [SerializeField] private AudioClip DeathSound;
@@ -51,6 +48,10 @@ public class Being : MonoBehaviour
         TryGetComponent<PlayerInput>(out _input);
         TryGetComponent<CinemachineImpulseSource>(out impulse);
         TryGetComponent<HandleRagdoll>(out ragdoll);
+        Setup();
+    }
+
+    void Setup() {
         if (ragdoll) {
             ragdoll.DeactivateRagdoll();
         }
@@ -100,6 +101,10 @@ public class Being : MonoBehaviour
     }
 
     void Update() {
+        if (!_input) {
+            return;
+        }
+        
         if (!isAI) {
             var item = inventory.current_item;
             bool _HasAnItemThatIsntTheDefaultOne = inventory.HasAnItem();
@@ -130,7 +135,7 @@ public class Being : MonoBehaviour
         if (BeingSound) {
             BeingSound.PlayOneShot(HEALTH_AUDIO_CLIP);
         }
-        if (health + value > 100) {
+        if (health + value > 100 && !isAI) {
             health = 100;
         }
         else {
@@ -265,10 +270,6 @@ public class Being : MonoBehaviour
         }
     }
 
-    public bool IsLockedOnto(string tag) {
-        return _NPCIKWeights.target.tag == tag;
-    }
-
     public bool HasInventory() {
         if (inventory) {
             return true;
@@ -283,10 +284,6 @@ public class Being : MonoBehaviour
 
     public void DisableLockOn() {
         _NPCIKWeights.DisableLook();
-    }
-
-    public Transform GetTarget() {
-        return _NPCIKWeights.target;
     }
 
     public void SetTarget(Transform target) {
@@ -319,14 +316,6 @@ public class Being : MonoBehaviour
                     break;
             }
         }
-    }
-
-    public Transform GetHeadTransform() {
-        return Head;
-    }
-
-    public bool HasIdleAnimation() {
-        return IdleAnimation;
     }
 
     public bool HasAnItem() {

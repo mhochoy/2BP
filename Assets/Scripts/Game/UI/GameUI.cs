@@ -121,4 +121,8 @@ public class GameUI : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+
+    void SetTimeScale(float time) {
+        Time.timeScale = time;
+    }
 }

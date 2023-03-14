@@ -66,13 +66,4 @@ public class HandleRagdoll : MonoBehaviour
             return false;
         }
     }
-
-    void DeactivateSound() {
-        AudioSource source;
-        TryGetComponent<AudioSource>(out source);
-
-        if (source.enabled) {
-            source.enabled = false;
-        }
-    }
 }

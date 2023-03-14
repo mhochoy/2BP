@@ -7,8 +7,6 @@ public class Item : MonoBehaviour
 {
     public string item_name;
     public ParticleSystem UseEffect;
-    public Transform l_handle;
-    public Transform r_handle;
     [SerializeField] protected AudioClip _UseSound;
     [SerializeField] protected Transform _EffectPoint;
     [SerializeField] protected bool ClickToUse;
